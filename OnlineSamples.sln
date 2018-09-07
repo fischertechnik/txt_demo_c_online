@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MotorOnOffSwitch", "MotorOnOffSwitch\MotorOnOffSwitch.vcproj", "{01F7944D-74EC-4089-A648-8D247CF692B8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Camera", "Camera\Camera.vcproj", "{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30D20558-4191-42F9-8833-3313840DCF49} = {30D20558-4191-42F9-8833-3313840DCF49}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jpeg", "Jpeg\Jpeg.vcproj", "{30D20558-4191-42F9-8833-3313840DCF49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01F7944D-74EC-4089-A648-8D247CF692B8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{01F7944D-74EC-4089-A648-8D247CF692B8}.Debug|Win32.Build.0 = Debug|Win32
+		{01F7944D-74EC-4089-A648-8D247CF692B8}.Release|Win32.ActiveCfg = Release|Win32
+		{01F7944D-74EC-4089-A648-8D247CF692B8}.Release|Win32.Build.0 = Release|Win32
+		{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}.Debug|Win32.Build.0 = Debug|Win32
+		{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}.Release|Win32.ActiveCfg = Release|Win32
+		{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}.Release|Win32.Build.0 = Release|Win32
+		{30D20558-4191-42F9-8833-3313840DCF49}.Debug|Win32.ActiveCfg = Debug|Win32
+		{30D20558-4191-42F9-8833-3313840DCF49}.Debug|Win32.Build.0 = Debug|Win32
+		{30D20558-4191-42F9-8833-3313840DCF49}.Release|Win32.ActiveCfg = Release|Win32
+		{30D20558-4191-42F9-8833-3313840DCF49}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
