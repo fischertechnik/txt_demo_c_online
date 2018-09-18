@@ -23,7 +23,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Implementation details for module ftProInterface2013SoecketCom
+// Implementation details for module ftProInterface2013SocketCom
 //
 // see also:
 //

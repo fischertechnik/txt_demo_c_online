@@ -98,10 +98,12 @@ public:
     // It is recommended to use the compressed transfer mode.
     // Note: transfers are automatically timed by the interface to once per 10ms
     // The interface sends the response 10ms after it send the previous response
-    bool DoTransferSimple();
+   //changed:2081-09-18 support now firmware 4.2.4. and 4.4.3.
+	bool DoTransferSimple();
 
     // Do an I/O transfer with compressed data transmission.
     // This mode is always faster and more reliable than the simple mode.
+	//changed:2081-09-18 support now firmware 4.2.4. and 4.4.3.  
     bool DoTransferCompressed();
 
     // Print the most important inputs and outputs to the console
@@ -150,9 +152,12 @@ protected:
     // Update timer values in transfer area
     void UpdateTimers();
 
-    // Stop all motors
-    void StopMotors();
-
+	/*
+   stop all motors
+   InCompressMode =true :use DoTransferCompressed else DoTransferSimple.
+   changed 2018-09-18
+   */
+    void StopMotors(bool InCompressMode);
 protected:
     // Pointer to transfer area to which this transfer handler shall transfer data
     FISH_X1_TRANSFER * m_transferarea;
