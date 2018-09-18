@@ -1,19 +1,25 @@
 //=============================================================================
 //              |
 // Headerfile   |   FtShmem.h
+//              |   Original:
 //              |   Common header file for Library [ftMscLib] and ROBO-TX
 //              |   Controller firmware
-//              |
+//              |   Actual:
+//              |   Extended for the fischertechnik TXT controller
 // Created      |   09.01.2009, by H.-Peter Classen
+// Last Change  |       2016 by ??????
+//              |              extended for the TXT firmware 4.1.6
+//              |   August 2018 by ??????
+//              |              extended for the TXT firmware 4.2.4
+//              |             tested with TXT firmware 4.4.3
 //              |
-// Last Change  |   
 //-----------------------------------------------------------------------------
 
 #ifndef __FT_SHMEM_H__
 // Protect against multiple file inclusion
 #define __FT_SHMEM_H__
 
-
+//still the firmware number for the TX-C
 #define FIRMWARE_VER        0x011E      // firmware version is 1.30
 
 
@@ -373,7 +379,7 @@ typedef struct uni_inp_config
 // fish.X1 [struct cnt_inp_config], 4 bytes
 typedef struct cnt_inp_config
 {
-    UINT8           mode;        // 1=normal, 0=inverted;
+    UINT8           mode;        // enum InputMode  mode;
     char            dummy[3];
 } CNT_CONFIG;
 
@@ -382,18 +388,12 @@ typedef struct cnt_inp_config
 // [shm_if_config_s], 88 bytes
 typedef struct ftX1config
 {
-    // TX-only: Program run state
     UINT8           pgm_state_req;        // enum PgmState    pgm_state_req;
     BOOL8           old_FtTransfer;
     char            dummy[2];
-    // Configuration of motrs
-    // 0=single output O1/O2, 1=motor output M1
     BOOL8           motor[IZ_MOTOR];
-    // Universal input mode, see enum InputMode
     UNI_CONFIG      uni[IZ_UNI_INPUT];
-    // 0=normal, 1=inverted (not really used)
     CNT_CONFIG      cnt[IZ_COUNTER];
-    // additional motor configuration data (currently not used)
     INT16           motor_config[IZ_MOTOR][4];
 } FTX1_CONFIG;
 
@@ -402,15 +402,10 @@ typedef struct ftX1config
 // [shm_if_input_s], 68 bytes
 typedef struct ftX1input
 {
-    // Universal inputs I1..I8
-    INT16           uni[IZ_UNI_INPUT];
-    // Counter inputs as digital inputs (0 or 1)
-    INT16           cnt_in[IZ_COUNTER];
-    // Counter inputs as counter values
-    INT16           counter[IZ_COUNTER];
-    // TX-only: left display button
+    INT16           uni[IZ_UNI_INPUT];      
+    INT16           cnt_in[IZ_COUNTER];     // logic state Counter Input
+    INT16           counter[IZ_COUNTER];    // Counter values
     INT16           display_button_left;
-    // TX-only: right display button
     INT16           display_button_right;
     // Set to 1 when last requested counter reset was fulfilled
     BOOL16          cnt_resetted[IZ_COUNTER];
@@ -553,8 +548,9 @@ typedef struct _hook_table
 
 
 // --------------------------------------------
-// New TXT Data
+// New TXT Data  firmware 4.1.6
 // --------------------------------------------
+//new firmware 4.1.6
 typedef struct  _IR_DATA
 {
     INT16   i16JoyLeftX;                // Value of left Joystick X-Axis  (0=middle -15..0..+15)
@@ -580,7 +576,7 @@ typedef struct  _IR_DATA
     UINT16  u16DipSwitch2;              // 1: Switch ON, 0: Switch OFF
 } KE_IR_INPUT_V01;
 
-
+//new firmware 4.1.6
 typedef struct _TXT_SPECIAL_INPUTS
 {
     // Supply voltage
@@ -602,8 +598,28 @@ typedef struct _TXT_SPECIAL_INPUTS
 
     // Id of sound command - set to sTxtInputs.u16SoundCmdId if firmware finished processing the command
     UINT16  u16SoundCmdId;
+    
+    // Date & Time
+    UINT16  u16Sec;
+    UINT16  u16Min;
+    UINT16  u16Hour24;
+    UINT16  u16Hour12;
+    UINT16  u16PmFlag;          // 1 = PM Time
+    UINT16  u16MDay;            // Day of Month (Range 1..31)
+    UINT16  u16Month;
+    UINT16  u16Year;
+    UINT16  u16WDay;            // Week Day (Range 0..6 or 1..7 ???)
+    
 } TXT_SPECIAL_INPUTS;
 
+//new firmware 4.2.4 and 4.4.3
+typedef struct _TXT_SPECIAL_INPUTS_2
+{
+    // Microphone
+    INT16  u16MicLin;
+    INT16  u16MicLog;
+} TXT_SPECIAL_INPUTS_2;
+//new firmware 4.1.6
 typedef struct _TXT_SPECIAL_OUTPUTS
 {
     // Id of sound command - incremented whenever a new command is sent
@@ -637,7 +653,8 @@ typedef struct _TXT_SPECIAL_OUTPUTS
     sizeof(INPUT_SIM)       + \
     sizeof(HOOK_TABLE)      + \
     sizeof(TXT_SPECIAL_INPUTS) + \
-    sizeof(TXT_SPECIAL_OUTPUTS) \
+    sizeof(TXT_SPECIAL_OUTPUTS) + \
+    sizeof(TXT_SPECIAL_INPUTS_2) \
     ))
 
 
@@ -659,6 +676,7 @@ typedef struct shm_if_s
     
     TXT_SPECIAL_INPUTS  sTxtInputs;     // TXT Special Inputs (Power, Temp, IR...)  
     TXT_SPECIAL_OUTPUTS sTxtOutputs;    // TXT Special Outputs (sound, LED)  
+    TXT_SPECIAL_INPUTS_2 sTxtInputs2;     // TXT Special Inputs (Power, Temp, IR...)
 
     char                reserved[RESERVE_SIZE];
 } FISH_X1_TRANSFER;

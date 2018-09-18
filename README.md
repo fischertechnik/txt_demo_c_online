@@ -5,3 +5,20 @@
 Please note, this is a first draft on GitHub!
 
 see [TXT C-Programming Expert Kit](https://www.fischertechnik.de/-/media/fischertechnik/fite/service/downloads/robotics/txt-controller/documents/09-txt-c-programming-expert-kit.ashx)
+
+## Replacement for the TXT-C-Programming-Kit-4-1-6
+2018-9-18 [CvL]
+This is a **draft version** for RoboPro firmware 4.2.4. and 4.4.3. : TXT-C-Programming-Kit-4-4-3_draft-01
+Tested with 4.4.3
+
+> Development environement: MS-Visual Studio community 2017 version 15.8.2
+
+> Resolved is the problem  with the Compressed mode.
+
+> Note: Don't forget to fill in the right ip-address
+
+> There is also added some extra tekst output for debugging.
+
+
+
+  

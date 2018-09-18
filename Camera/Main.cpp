@@ -38,25 +38,32 @@ int main()
     TransArea = new FISH_X1_TRANSFER[IF08_MAX];
 
     // Create communication handler
-    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.7.2" );
+    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.10.160" );
 
     // Initialize communication handler
     ComHandler->BeginTransfer();
     // Start camera.
     // Tested resolutions / frame rates for the ft-camera are 320x240@30fps and 640x480@15fps
-    ComHandler->StartCamera( 320, 240, 30, 50 );
-    // Allocate yuv buffer (size must match the numbers given above!
-    size_t yuvsize = 320*240*2;
-    unsigned char *yuv = new unsigned char[yuvsize];
+ //   ComHandler->StartCamera( 320, 240, 30, 50 );
+    ComHandler->StartCamera( 640, 480, 15, 50 );
+	// Allocate yuv buffer (size must match the numbers given above!
+  //  size_t yuvsize = 320*240*2;
+	size_t yuvsize = 640 * 480 * 2;
+	unsigned char *yuv = new unsigned char[yuvsize];
 
     // Loop for 20 frames
     int iLoop;
     clock_t prev = clock();
-    for( iLoop=0; iLoop<200; iLoop++ )
+    for( iLoop=0; iLoop<20; iLoop++ )
     {
         unsigned char *buffer;
         size_t size;
-        ComHandler->GetCameraFrameJpeg( &buffer, &size );
+		if (!ComHandler->GetCameraFrameJpeg(&buffer, &size))
+		{
+			cerr << "GetCameraFrameJpeg in Error " << endl;
+			return -1;
+	    }
+		   ;
         clock_t now = clock();
         cout << "Received frame with " << size << " bytes in " << now-prev << " clocks" << endl;
         prev = now;
@@ -64,12 +71,12 @@ int main()
         if( size )
         {
             // Decode the JPEG to YUV422
-            size_t bytes_read;
+            size_t bytes_read=0;
             if( ftProJpegDec( buffer, size, yuv, yuvsize, &bytes_read) )
             {
                 // Write YUV file (typically YUV422 interleaved, depends on camera)
                 std::ostringstream filename;
-                filename << "Image_" << iLoop << ".yuv";
+                filename << "RoboProImage_" << iLoop << ".yuv";
                 ofstream file( filename.str().c_str(), ofstream::binary | ofstream::trunc );
                 file.write( (char*)yuv, yuvsize );
                 file.close();
@@ -82,11 +89,11 @@ int main()
 
             // Write JPEG
             std::ostringstream filename;
-            filename << "Image_" << iLoop << ".jpg";
+            filename << "RoboProImage_" << iLoop << ".jpg";
             ofstream file( filename.str().c_str(), ofstream::binary | ofstream::trunc );
             file.write( (char*)buffer, size );
             file.close();
-        }
+        } 
 
         // Do some dummy transfer on the main socket. Otherwise it will close cause of a timeout.
         // GetVersion is the most lightweight command supported

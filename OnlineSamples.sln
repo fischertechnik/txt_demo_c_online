@@ -1,14 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MotorOnOffSwitch", "MotorOnOffSwitch\MotorOnOffSwitch.vcproj", "{01F7944D-74EC-4089-A648-8D247CF692B8}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MotorOnOffSwitch", "MotorOnOffSwitch\MotorOnOffSwitch.vcxproj", "{01F7944D-74EC-4089-A648-8D247CF692B8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Camera", "Camera\Camera.vcproj", "{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{30D20558-4191-42F9-8833-3313840DCF49} = {30D20558-4191-42F9-8833-3313840DCF49}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Camera", "Camera\Camera.vcxproj", "{AAA32E4C-0C85-48B2-BAC0-826A0B37EBFF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jpeg", "Jpeg\Jpeg.vcproj", "{30D20558-4191-42F9-8833-3313840DCF49}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jpeg", "Jpeg\Jpeg.vcxproj", "{30D20558-4191-42F9-8833-3313840DCF49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,5 +30,23 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9BD3DCF7-20A4-46F7-A5E3-5A13087561EB}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://ft-info.visualstudio.com/
+		SccProjectUniqueName0 = MotorOnOffSwitch\\MotorOnOffSwitch.vcxproj
+		SccProjectName0 = MotorOnOffSwitch
+		SccLocalPath0 = MotorOnOffSwitch
+		SccProjectUniqueName1 = Camera\\Camera.vcxproj
+		SccProjectName1 = Camera
+		SccLocalPath1 = Camera
+		SccProjectUniqueName2 = Jpeg\\Jpeg.vcxproj
+		SccProjectName2 = Jpeg
+		SccLocalPath2 = Jpeg
+		SccLocalPath3 = .
 	EndGlobalSection
 EndGlobal
