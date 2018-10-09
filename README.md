@@ -2,10 +2,6 @@
 
 # TXT C Online Examples
 
-Please note, this is a first draft on GitHub!
-
-see [TXT C-Programming Expert Kit](https://www.fischertechnik.de/-/media/fischertechnik/fite/service/downloads/robotics/txt-controller/documents/09-txt-c-programming-expert-kit.ashx)
-
 ## Replacement for the TXT-C-Programming-Kit-4-1-6
 2018-9-18 [CvL]
 This is a **draft version** for RoboPro firmware 4.2.4. and 4.4.3: 
