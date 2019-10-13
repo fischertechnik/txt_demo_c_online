@@ -5,10 +5,11 @@
 ## Replacement for the TXT-C-Programming-Kit-4-1-6
 
 2018-9-18 [CvL]
+
 2019-10-13 [CvL]
 
 This is a **draft version** for RoboPro firmware 4.2.4. up to 4.6.6: 
-**TXT-C-Programming-Kit-4-4-3_draft-01**
+**TXT-C-Programming-Kit-4-6-6_draft-01**
 
 Tested with firmware 4.6.6 and on MS-Windows 10
 
