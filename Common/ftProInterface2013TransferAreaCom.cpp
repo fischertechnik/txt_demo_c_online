@@ -31,9 +31,17 @@
 //          Add some firmware 4.2.4 variable to the communication.
 //          It is now working for firmware 4.4.3.
 //          Made some adjust so that the Simple mode is working too.
+//Changes:  2019 - 06 - 18 C.van Leeuwen
+//          Commpressed mode is working, update of the TA
+// Changes: 2020 - 06 - 18 C.van Leeuwen
+//          It is now working for firmware 4.6.6. and 4.7.0 pre-release.
+//          Reduce the size of the TA: max=2 TXT master + TXT slave01,
+//          Add check in destructor to avoid double EndTransver
+//          
 ///////////////////////////////////////////////////////////////////////////////
 
 #define _CRT_SECURE_NO_WARNINGS
+
 
 #include <iostream>
 #include <winsock2.h>
@@ -43,6 +51,8 @@
 
 #include "ftProInterface2013TransferAreaCom.h"
 #include "ftProInterface2013SocketCom.h"
+
+
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -60,10 +70,10 @@ using namespace std;
 
 bool SendCommand( SOCKET socket, const struct ftIF2013Command_Base *commanddata, size_t commandsize, enum ftIF2013ResponseId responseid, struct ftIF2013Response_Base *responsedata, size_t responsesize )
 {
-
+#ifdef TEST
 	//wat is char voor een type: 8 bits    std::hex <<
-	cerr << "SendCommand 1: start sending command size= "<< std::dec << commandsize << endl;
-	
+	cout << "SendCommand 1: start sending command size= "<< std::dec << commandsize << endl;
+#endif	
     int result;
     size_t nRead=0;
     char *pos = (char*) responsedata; 
@@ -73,8 +83,9 @@ bool SendCommand( SOCKET socket, const struct ftIF2013Command_Base *commanddata,
         cerr << "SendCommand 1: Error sending command" << endl;
         return false;
     }
-	cerr << "SendCommand 1: succes sending command" << endl;
-
+#ifdef TEST
+	cout << "SendCommand 1: succes sending command" << endl;
+#endif
 
     while( nRead < responsesize )
     {
@@ -95,18 +106,20 @@ bool SendCommand( SOCKET socket, const struct ftIF2013Command_Base *commanddata,
 			//WSACleanup();
 			return false;
         }
-		cerr << "SendCommand 1: succes receiving response nread=0x" << std::hex << nRead<<" result=0x"<<result << endl;
-
+#ifdef TEST
+		cout << "SendCommand 1: succes receiving response nread=0x" << std::hex << nRead<<" result=0x"<<result << endl;
+#endif
         nRead += result;
         pos += result;
     }
     if( responsedata->m_id != responseid )
     {
-        cerr << "SendCommand 1: Response ID " << responsedata->m_id << " does't match " << responseid << endl;
+        cerr << "SendCommand 1: Response ID " << (UINT32)responsedata->m_id << " does't match " << (UINT32)responseid << endl;
         return false;
     }
-	cerr << "SendCommand 1: Response ID " << responsedata->m_id << "  match " << responseid << endl;
-
+#ifdef TEST
+	cout << "SendCommand 1: Response ID " << (UINT32)responsedata->m_id << "  match " << (UINT32)responseid << endl;
+#endif
     return true;
 }
 
@@ -143,7 +156,7 @@ bool SendCommandEx(
     }
     if( responsedata->m_id != responseid )
     {
-        cerr << "SendCommandEx 2: Response ID " << responsedata->m_id << " does't match " << responseid << endl;
+        cerr << "SendCommandEx 2: Response ID " << (UINT32)responsedata->m_id << " does't match " << (UINT32)responseid << endl;
         return false;
     }
 
@@ -192,7 +205,9 @@ ftIF2013TransferAreaComHandler::ftIF2013TransferAreaComHandler( FISH_X1_TRANSFER
     m_camerabuffersize( 0 ),
     m_camerabuffer( 0 )
 {
-	cerr << "ftIF2013TransferAreaComHandler start" << endl;
+#ifdef TEST
+    cout << "ftIF2013TransferAreaComHandler start" << endl;
+#endif
 	// clear transfer area
     memset( m_transferarea, 0, m_nAreas*sizeof(*m_transferarea) );
     SetDefaultConfig();
@@ -203,16 +218,18 @@ ftIF2013TransferAreaComHandler::ftIF2013TransferAreaComHandler( FISH_X1_TRANSFER
     // Initialize Windows winsock
     WSADATA wsaData;
     memset( &wsaData, 0, sizeof(wsaData) );
-    //WSAStartup( MAKEWORD(2,0), &wsaData );
-    if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) cerr << "ftIF2013TransferAreaComHandler WSAStartup error" << endl;
-    cout << "ftIF2013TransferAreaComHandler end" << endl;
-
+   if( WSAStartup( MAKEWORD(2,0), &wsaData )!=0)cerr << "ftIF2013TransferAreaComHandler WSAStartup error" << endl; ;
+#ifdef TEST
+	cout << "ftIF2013TransferAreaComHandler end" << endl;
+#endif
 }
 
 ftIF2013TransferAreaComHandler::~ftIF2013TransferAreaComHandler()
 {
-    EndTransfer();
-    WSACleanup();
+    cout << "ftIF2013TransferAreaComHandler: destructor " << endl;
+    if (m_online) EndTransfer();
+    int tt= WSACleanup();
+    cout << "ftIF2013TransferAreaComHandler: destructor clean up socket2 ="<<tt << endl;
 }
 
 // Get Interface Version
@@ -221,79 +238,103 @@ UINT32 ftIF2013TransferAreaComHandler::GetVersion()
     // Send a query status command
     ftIF2013Command_QueryStatus command;
     memset( &command, 0, sizeof(command) );
-    command.m_id = ftIF2013CommandId_QueryStatus;
+    command.m_id = ftIF2013CommandId::ftIF2013CommandId_QueryStatus;
     ftIF2013Response_QueryStatus response;
-	cerr << "Methode GetVersion 4" << endl;
-	cerr << "GetVersion 4 Before SendCommand: ftIF2013CommandId_QueryStatus m_id=0x" << std::hex << command.m_id << endl;
-
-    if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_QueryStatus, &response, sizeof(response) ) )
+#ifdef TEST	
+	cout << "GetVersion: Before SendCommand: ftIF2013CommandId_QueryStatus m_id=0x" << std::hex << (UINT32)command.m_id << endl;
+#endif
+    if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_QueryStatus, &response, sizeof(response) ) )
     {
 		cerr << "GetVersion 4 After SendCommand: ftIF2013CommandId_QueryStatus is false" << endl;
 		return 0;
     }
-	cerr << "GetVersion 4 After SendCommand: ftIF2013CommandId_QueryStatus is true" << endl;
+	//cout << "GetVersion:  After SendCommand: ftIF2013CommandId_QueryStatus is true" << endl;
 	strncpy( m_info_devicetype, response.m_devicename, sizeof(m_info_devicetype)/sizeof(*m_info_devicetype) );
     m_info_version = response.m_version;
-	cerr << "GetVersion 4: m_info_devicetype="<< m_info_devicetype << endl;
-	cerr << "GetVersion 4: m_info_version=" << m_info_version << endl;
-
+#ifdef TEST	
+	cout << "GetVersion: m_info_devicetype =" << m_info_devicetype << endl;
+	cout << "          : m_info_version    =" << m_info_version << endl;
+#endif
     return m_info_version;
 }
+/// <summary>
+    /// Set the transfer mode <br/>
+    /// Default is Compressed.
+    /// </summary>
+    /// <param name="Compressed"> Simple mode =false: no compression only for master<br/> 
+    /// Compression mode = true: works for both only master and master+ slave.</param>
+    /// <remarks> since 2020-06-18 </remarks>
+    /// <returns></returns>
+void ftIF2013TransferAreaComHandler::SetTransferMode(bool Compressed) {
+#ifdef TEST	
+    cout << "SetTransferMode: Compressed ="<< Compressed << endl;
+#endif
+    this->IsCompressedMode = Compressed;
+};
 
 bool ftIF2013TransferAreaComHandler::BeginTransfer()
 {
-	cerr << "Methode BeginTransfer" << endl;
+#ifdef TEST	
+    cout << "Methode BeginTransfer" << endl;
+#endif
     if( m_online )
     {
         cerr << "BeginTransfer: transfer alread started" << endl;
         return false;
     }
-	cerr << "BeginTransfer: transfer not started" << endl;
-
+#ifdef TEST	
+	cout << "BeginTransfer: transfer not started" << endl;
+#endif
     m_socket = OpenSocket( m_port );
     if( m_socket == INVALID_SOCKET )
     {
         cerr << "BeginTransfer: Could not open sockt" << endl;
         return false;
     }
-	cerr << "BeginTransfer: Has  open sockt" << endl;
-
+#ifdef TEST	
+    cout << "BeginTransfer: Has  open sockt" << endl;
+#endif
     // Check TXT Version
 	UINT32 version = GetVersion();
-    if( GetVersion()<0x04010600 )
+    if( GetVersion()<0x04060600 )
     {
-        cerr << "BeginTransfer: TXT Version is < 4.1.6 0x" << std::hex << (int) version <<endl;
+        cerr << "BeginTransfer: TXT Version is lower then 4.6.6:  0x" << std::hex << (int) version <<endl;
         return false;
     }
-	cerr << "BeginTransfer: TXT Version is >= 4.1.6   found=0x" << std::hex << version << endl;
-
+#ifdef TEST	
+    cout << "BeginTransfer: TXT Version is >= 4.6.6   found=0x" << std::hex << version << endl;
+#endif
     // Send a start transfer command (e.g. ignore key presses on display)
     {
         ftIF2013Command_StartOnline command;
         memset( &command, 0, sizeof(command) );
-        command.m_id = ftIF2013CommandId_StartOnline;
+        command.m_id = ftIF2013CommandId::ftIF2013CommandId_StartOnline;
         ftIF2013Response_StartOnline response;
-		
-
-     //   strncpy( command.m_name, "Online", 6 );
+        //   strncpy( command.m_name, "Online", 6 );
 		strncpy(command.m_name, "Online", sizeof(command.m_name) / sizeof(*command.m_name));
-		//       strncpy_s( command.m_name, sizeof(command.m_name), "Online", sizeof(command.m_name)/sizeof(*command.m_name) );
-		cerr << "BeginTransfer Before SendCommand: ftIF2013CommandId_StartOnline command name="  << command.m_name <<endl;
-		cerr << "BeginTransfer Before SendCommand: ftIF2013CommandId_StartOnline command id=0x" << hex <<(UINT32) command.m_id << endl;
-		cerr << "BeginTransfer Before SendCommand: ftIF2013CommandId_StartOnline response size id=0x" << hex << sizeof(response) << endl;
-
-        if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_StartOnline, &response, sizeof(response) ) )
+        // strncpy_s( command.m_name, sizeof(command.m_name), "Online", sizeof(command.m_name)/sizeof(*command.m_name) );
+#ifdef TEST	
+        cout << "BeginTransfer Before SendCommand: ftIF2013CommandId_StartOnline command name="  << command.m_name <<endl;
+        cout << "BeginTransfer Before SendCommand: ftIF2013CommandId_StartOnline command id=0x" << hex <<(UINT32) command.m_id << endl;
+        cout << "BeginTransfer Before SendCommand: ftIF2013CommandId_StartOnline response size id=0x" << hex << sizeof(response) << endl;
+#endif
+        if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_StartOnline, &response, sizeof(response) ) )
         {
 			cerr << "BeginTransfer 5 SendCommand: ftIF2013CommandId_StartOnline is false" <<  endl;
 			return false;
         }
-		cerr << "BeginTransfer SendCommand: ftIF2013CommandId_StartOnline is true" <<  endl;
-
+#ifdef TEST	
+        cout << "BeginTransfer SendCommand: ftIF2013CommandId_StartOnline is true" <<  endl;
+#endif
 	}
 
+   // cout << "BeginTransfer UpdateConfig  start" << endl;
     // Update I/O Configuration
-    UpdateConfig();
-	cerr << "UpdateConfig 2 start" << endl;
+    if (!this->UpdateConfig()) {
+        cerr << "BeginTransfer UpdateConfig error" << endl;
+        return false;
+    };
+	//cout << "BeginTransfer UpdateConfig  end" << endl;	
 
     // initialize transfer area time handlers
     long now = clock();
@@ -303,54 +344,56 @@ bool ftIF2013TransferAreaComHandler::BeginTransfer()
     m_timelast[3] = now;
     m_timelast[4] = now;
     m_timelast[5] = now;
-
     m_online = true;
-	cerr << "UpdateConfig 2 end" << endl;
-
 	return true;
 }
 
 // Update the I/O (e.g. universal input) configuration
 bool ftIF2013TransferAreaComHandler::UpdateConfig()
 {
-	cerr << "Methode UpdateConfig" << endl;
-    for( int iExt=0; iExt<IF08_MAX; iExt++ )
+#ifdef TEST	   
+	cout << "UpdateConfig: start" << endl;
+#endif  
+    for( int iExt=0; iExt<IF_TXT_MAX; iExt++ )
     {
         ftIF2013Command_UpdateConfig command;
         memset( &command, 0, sizeof(command) );
-        command.m_id = ftIF2013CommandId_UpdateConfig;
+        command.m_id = ftIF2013CommandId::ftIF2013CommandId_UpdateConfig;
         command.m_config = m_transferarea[iExt].ftX1config;
         command.m_config_id = m_transferarea[iExt].ftX1state.config_id;
         command.m_extension_id = iExt;
-		cerr << "UpdateConfig Before SendCommand: ftIF2013CommandId_UpdateConfig" << endl;
+
+//		cout << "UpdateConfig Before SendCommand: ftIF2013CommandId_UpdateConfig" << endl;
 
         ftIF2013Response_UpdateConfig response;
-        if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_UpdateConfig, &response, sizeof(response) ) )
+        if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_UpdateConfig, &response, sizeof(response) ) )
         {
             cerr << "UpdateConfig: Error sending ftIF2013ResponseId_UpdateConfig command" << endl;
             return false;
         }
     }
-	cerr << "UpdateConfig: end" << endl;
-
+#ifdef TEST	
+	cout << "UpdateConfig: end" << endl;
+#endif  
     return true;
 }
 
 bool ftIF2013TransferAreaComHandler::DoTransferSimple()
 {
-	cerr << "Methode DoTransferSimple" << endl;
+	//cout << "Methode DoTransferSimple" << endl;
 
     if( m_socket == INVALID_SOCKET )
     {
         cerr << "DoTransferSimple: Socket not open" << endl;
         return false;
     }
-	cerr << "DoTransferSimple: Socket is open" << endl;
-
+#ifdef TEST	
+    cout << "DoTransferSimple: Socket is open" << endl;
+#endif
     // Uncompressed transfer mode
     ftIF2013Command_ExchangeData command;
     memset( &command, 0, sizeof(command) );
-    command.m_id = ftIF2013CommandId_ExchangeData;
+    command.m_id = ftIF2013CommandId::ftIF2013CommandId_ExchangeData;
 
     // Transfer data from transfer struct to communication struct
     for( int i=0; i<ftIF2013_nPwmOutputs; i++ )
@@ -370,18 +413,20 @@ bool ftIF2013TransferAreaComHandler::DoTransferSimple()
     command.m_sound_index = m_transferarea[0].sTxtOutputs.u16SoundIndex;
     command.m_sound_repeat = m_transferarea[0].sTxtOutputs.u16SoundRepeat;
     command.m_sound_command_id = m_transferarea[0].sTxtOutputs.u16SoundCmdId;
-	cerr << "DoTransferSimple: Before SendCommand: ftIF2013CommandId_ExchangeData command" << endl;
-
+#ifdef TEST	
+    cout << "DoTransferSimple: Before SendCommand: ftIF2013CommandId_ExchangeData command" << endl;
+#endif
     ftIF2013Response_ExchangeData response;
     {
-        if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_ExchangeData, &response, sizeof(response) ) )
+        if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_ExchangeData, &response, sizeof(response) ) )
         {
             cerr << "DoTransferSimple: Error sending ftIF2013CommandId_ExchangeData command" << endl;
             return false;
         }
     }
-	cerr << "DoTransferSimple: After SendCommand: ftIF2013CommandId_ExchangeData command" << endl;
-
+#ifdef TEST	
+	cout << "DoTransferSimple: After SendCommand: ftIF2013CommandId_ExchangeData command" << endl;
+#endif
     // Transfer data from communication struct to transfer struct
     // Universal Inputs
     for( int i=0; i<ftIF2013_nUniversalInputs && i<IZ_UNI_INPUT; i++ )
@@ -454,16 +499,21 @@ bool ftIF2013TransferAreaComHandler::DoTransferSimple()
         channel->u16DipSwitch1           = ( response.m_ir[i].m_ir_bits & 4 ) ? 1 : 0;
         channel->u16DipSwitch2           = ( response.m_ir[i].m_ir_bits & 8 ) ? 1 : 0;
     }
-	m_transferarea[0].sTxtInputs2.u16MicLin = m_expbuffer->GetUINT16();     //6 2018-09-18
-	m_transferarea[0].sTxtInputs2.u16MicLog = m_expbuffer->GetUINT16();     //6 2018-09-18
 
     // Timers
-	cerr << "Methode Update Timers" << endl;
+	//cout << "Methode Update Timers" << endl;
 	UpdateTimers();
-	cerr << "Methode End TransferSimple" << endl;
-
+#ifdef TEST	
+	cout << "Methode End TransferSimple" << endl;
+#endif  
     return true;
 }
+
+bool ftIF2013TransferAreaComHandler::DoTransfer()
+{
+    return (IsCompressedMode) ? DoTransferCompressed() : DoTransferSimple();
+}
+
 
 bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
 {
@@ -472,11 +522,12 @@ bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
         cerr << "DoTransferCompressed: socket not open" << endl;
         return false;
     }
-	cerr << "DoTransferCompressed: socket open" << endl;
 
-    // Ccompressed transfer
+#ifdef TEST	
+    cout << "DoTransferCompressed: socket open" << endl;
+#endif   
     memset( m_exchange_cmpr_command, 0, sizeof(*m_exchange_cmpr_command) );
-    m_exchange_cmpr_command->m_id = ftIF2013CommandId_ExchangeDataCmpr;
+    m_exchange_cmpr_command->m_id = ftIF2013CommandId::ftIF2013CommandId_ExchangeDataCmpr;
 
     // Transfer order
     // INT16 m_pwmOutputValues[ftIF2013_nPwmOutputs];
@@ -502,7 +553,7 @@ bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
         }
     }
 
-    for( int iIf=0; iIf<IF08_MAX; iIf++ )
+    for( int iIf=0; iIf<IF_TXT_MAX; iIf++ )
     {
         if( iIf>=1 && !(m_exchange_cmpr_command->m_active_extensions & (1<<(iIf-1))) )
         {
@@ -540,16 +591,18 @@ bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
 	// output info??
     m_expbuffer->Rewind();
     {
+#ifdef TEST	
 		cerr << "DoTransferCompressed SendCommand: before" << endl;
+#endif
 		if( !SendCommandEx( m_socket,
             m_exchange_cmpr_command, sizeof(*m_exchange_cmpr_command),
-            ftIF2013ResponseId_ExchangeDataCmpr, m_exchange_cmpr_response, sizeof(*m_exchange_cmpr_response), m_expbuffer->GetMaxBufferSize() ) )
+            ftIF2013ResponseId::ftIF2013ResponseId_ExchangeDataCmpr, m_exchange_cmpr_response, sizeof(*m_exchange_cmpr_response), m_expbuffer->GetMaxBufferSize() ) )
         {
             cerr << "DoTransferCompressed SendCommand: Error sending ftIF2013ResponseId_ExchangeDataCmpr command" << endl;
             return false;
         }
-		cout << "DoTransferCompressed SendCommand: Sending Ready ftIF2013ResponseId_ExchangeDataCmpr command, CRC="
-			<< m_comprbuffer->GetCrc()<< " compressed size send=" << m_comprbuffer->GetCompressedSize() << endl;
+//		cout << "DoTransferCompressed SendCommand: Sending Ready ftIF2013ResponseId_ExchangeDataCmpr command, CRC="
+//			<< m_comprbuffer->GetCrc()<< " compressed size send=" << m_comprbuffer->GetCompressedSize() << endl;
 		m_expbuffer->SetBufferSize( m_exchange_cmpr_response->m_extrasize );
     }
 
@@ -574,7 +627,7 @@ bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
     //     UINT16 m_ir_bits;   // 2^0=on, 2^1=off, 2^2=switch1, 2^3=switch2
     // } m_ir[5];
 
-    for( int iIf=0; iIf<IF08_MAX; iIf++ )
+    for( int iIf=0; iIf<IF_TXT_MAX; iIf++ )
     {
         if( iIf>=1 && !(m_exchange_cmpr_response->m_active_extensions & (1<<(iIf-1))) )
         {
@@ -667,8 +720,8 @@ bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
             channel->u16DipSwitch1           = ( bits & 4 ) ? 1 : 0;
             channel->u16DipSwitch2           = ( bits & 8 ) ? 1 : 0;
         }
-		area->sTxtInputs2.u16MicLin = m_expbuffer->GetUINT16();     //6 2018-09-18
-		area->sTxtInputs2.u16MicLog = m_expbuffer->GetUINT16();     //6 2018-09-18
+		area->sTxtInputs2.u16MicLin = m_expbuffer->GetUINT16();     //6
+		area->sTxtInputs2.u16MicLog = m_expbuffer->GetUINT16();     //6
 
     }
 
@@ -678,7 +731,9 @@ bool ftIF2013TransferAreaComHandler::DoTransferCompressed()
 			    << " CRC from buffer"<< m_expbuffer->GetCrc() <<endl;
         return false;
     }
-	cerr << "Did TransferCompressed: no CRC Error" << endl;
+#ifdef TEST	
+	cout << "Did TransferCompressed: no CRC Error" << endl;
+#endif
 
     // Timers
     UpdateTimers();
@@ -738,22 +793,27 @@ void ftIF2013TransferAreaComHandler::EndTransfer()
 
     // Stop all motors
 	cout << "EndTransfer: stop motors" << endl;
-	StopMotors(true); // in case of problems with the compressed mode set false.
+	//StopMotorsSimple();
+    StopMotors();
 
     // Stop online mode on interface (e.g. ignore key presses on display)
     if( m_socket != INVALID_SOCKET )
     {
         ftIF2013Command_StopOnline command;
         ftIF2013Response_StopOnline response;
-		cerr << "Before SendCommand: ftIF2013CommandId_UpdateConfig(2)" << endl;
+		cout << "EndTransfer: Before SendCommand: ftIF2013ResponseId_StopOnline" << endl;
 
-        command.m_id = ftIF2013CommandId_StopOnline;
-        SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_StopOnline, &response, sizeof(response) );
+        command.m_id = ftIF2013CommandId::ftIF2013CommandId_StopOnline;
+        if (!SendCommand(m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_StopOnline, &response, sizeof(response))) {
+            cerr << "EndTransfer: SendCommand: error" << endl;
+        };
 
-        closesocket( m_socket );
-    }
+        int tt=closesocket( m_socket );
+        cout << "EndTransfer: m_socket is closed ="<<tt << endl;
+    } else cout << "EndTransfer: m_socket is INVALID_SOCKE" << endl;
 
     m_online = false;
+    cout << "EndTransfer: end" << endl;
 }
 
 bool ftIF2013TransferAreaComHandler::StartCamera( int width, int height, int framerate, int powerlinefreq, const char *port )
@@ -775,7 +835,7 @@ bool ftIF2013TransferAreaComHandler::StartCamera( int width, int height, int fra
 
     ftIF2013Command_StartCameraOnline command;
     memset( &command, 0, sizeof(command) );
-    command.m_id = ftIF2013CommandId_StartCameraOnline;
+    command.m_id = ftIF2013CommandId::ftIF2013CommandId_StartCameraOnline;
     command.m_width = width;
     command.m_height = height;
     command.m_framerate = framerate;
@@ -784,7 +844,7 @@ bool ftIF2013TransferAreaComHandler::StartCamera( int width, int height, int fra
 
     ftIF2013Response_StartCameraOnline response;
 
-    if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_StartCameraOnline, &response, sizeof(response) ) )
+    if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_StartCameraOnline, &response, sizeof(response) ) )
     {
         cerr << "StartCamera: Error sending ftIF2013ResponseId_StartCameraOnline command" << endl;
         return false;
@@ -817,11 +877,11 @@ void ftIF2013TransferAreaComHandler::StopCamera()
 
     ftIF2013Command_StopCameraOnline command;
     memset( &command, 0, sizeof(command) );
-    command.m_id = ftIF2013CommandId_StopCameraOnline;
+    command.m_id = ftIF2013CommandId::ftIF2013CommandId_StopCameraOnline;
 	cerr << "Before SendCommand: ftIF2013CommandId_StopCameraOnline" << endl;
 
     ftIF2013Response_StopCameraOnline response;
-    if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId_StopCameraOnline, &response, sizeof(response) ) )
+    if( !SendCommand( m_socket, &command, sizeof(command), ftIF2013ResponseId::ftIF2013ResponseId_StopCameraOnline, &response, sizeof(response) ) )
     {
         return;
     }
@@ -846,7 +906,7 @@ bool ftIF2013TransferAreaComHandler::GetCameraFrameJpeg( unsigned char **buffer,
         cerr << "GetCameraFrameJpeg: Error receiving camera frame" << endl;
         return false;
     }
-    if( response.m_id != ftIF2013DataId_CameraOnlineFrame )
+    if( response.m_id != ftIF2013ResponseId::ftIF2013DataId_CameraOnlineFrame )
     {
         cerr << "GetCameraFrameJpeg: Camera response id doesn't match" << endl;
         return false;
@@ -887,7 +947,7 @@ bool ftIF2013TransferAreaComHandler::GetCameraFrameJpeg( unsigned char **buffer,
 
     // Send Acknowledge
     ftIF2013Acknowledge_CameraOnlineFrame ack;
-    ack.m_id = ftIF2013AcknowledgeId_CameraOnlineFrame;
+    ack.m_id = ftIF2013CommandId::ftIF2013AcknowledgeId_CameraOnlineFrame;
 
     result = send( m_camerasocket, (const char*)&ack, sizeof(ack), 0 );
     if (result != sizeof(ack))
@@ -933,8 +993,9 @@ SOCKET ftIF2013TransferAreaComHandler::OpenSocket( const char *port )
             cerr << "OpenSocket: Error opening socket" << endl;
             return false;//SOCKET_ERROR?
         }
-		cerr << "OpenSocket: opening socket" << endl;
-
+#ifdef TEST	
+		cout << "OpenSocket: opening socket" << endl;
+#endif
         // Connect to the interface.
         if( connect( resultsocket, adr->ai_addr, (int)adr->ai_addrlen) == SOCKET_ERROR )
         {
@@ -944,8 +1005,9 @@ SOCKET ftIF2013TransferAreaComHandler::OpenSocket( const char *port )
             continue;//next step in the for-statement
 			//only in this case the for goes on with the iteration
         }
-		cerr << "OpenSocket: connected to socket" << endl;
-
+#ifdef TEST	
+		cout << "OpenSocket: connected to socket" << endl;
+#endif
         // Set timeout. Close connection if the interface doesn't send or receive a command for this long
         {
  			unsigned long iTimeout_recv =0;//DWORD
@@ -970,8 +1032,9 @@ SOCKET ftIF2013TransferAreaComHandler::OpenSocket( const char *port )
 				break;
             }
         }
-		cerr << "OpenSocket: Connection successfull" << endl;
-
+#ifdef TEST	
+		cout << "OpenSocket: Connection successfull" << endl;
+#endif
         // Connection successfull, so end the loop
         break;
     }
@@ -1030,11 +1093,11 @@ void ftIF2013TransferAreaComHandler::UpdateTimers()
         m_transferarea[0].IFTimer.Timer1min++;
     }
 }
-/*
-stop all motors
-InCompressMode =true :use DoTransferCompressed else DoTransferSimple
-*/
-void ftIF2013TransferAreaComHandler::StopMotors(bool InCompressMode)
+
+
+
+
+void ftIF2013TransferAreaComHandler::StopMotors()
 {
 	cout << "StopMotors: stop motors" << endl;
 
@@ -1045,25 +1108,11 @@ void ftIF2013TransferAreaComHandler::StopMotors(bool InCompressMode)
             m_transferarea[i].ftX1out.duty[j] = 0;
         }
     }
-	if(InCompressMode)
-	{
-    DoTransferCompressed(); 
-	}
-	else {
-		DoTransferSimple();
-	}
+    this->DoTransfer();
 }
+/****************************************************************************/
+/*   ftIF2013TransferAreaComHandlerEx::   I2C section                       */
+/****************************************************************************/
 
-//void ftIF2013TransferAreaComHandler::StopMotorsSimple()
-//{
-//	cout << "StopMotorsSimple: stop motors" << endl;
-//
-//	for (int i = 0; i<1; i++)
-//	{
-//		for (int j = 0; j<IZ_PWM_CHAN; j++)
-//		{
-//			m_transferarea[i].ftX1out.duty[j] = 0;
-//		}
-//	}
-//	DoTransferSimple();
-//}
+
+

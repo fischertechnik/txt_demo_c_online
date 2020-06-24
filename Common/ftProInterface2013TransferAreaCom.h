@@ -48,11 +48,18 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+
 #include <winsock2.h>
+
+/*
+
+Camera
+
+*/
 
 extern "C" {
 #include "common.h"
-#include "FtShmem.h"
+#include "FtShmemTxt.h"
 }
 
 // Double inclusion protection 
@@ -82,29 +89,49 @@ public:
     ftIF2013TransferAreaComHandler( FISH_X1_TRANSFER *transferarea, int nAreas=1, const char *name="192.168.7.2", const char *port="65000" );
 
     // Destructor
+    // If transfer not yet ended it is also running EndTransfer 
     ~ftIF2013TransferAreaComHandler();
+
+    /// <summary>
+    /// Set the transfer mode <br/>
+    /// Default is Compressed.
+    /// </summary>
+    /// <param name="Compressed"> Simple mode =false: no compression only for master<br/> 
+    /// Compression mode = true: works for both only master and master+ slave.</param>
+    /// <remarks> since 2020-06-18 </remarks>
+    /// <returns></returns>
+    void SetTransferMode(bool Compressed);
 
     // Get Interface Version
     UINT32 GetVersion();
 
     // Open the TCP/IP channel and initialize the data transfer
+    // Includes a UpdateConfig();
     bool BeginTransfer();
 
-    // Update the I/O (e.g. universal input) configuration
-    bool UpdateConfig();
+    // Update the I/O (e.g. universal input) configuration.
+    // Can only be used after BeginTransfer()
+     bool UpdateConfig();
 
-    // Do a transfer (uncompressed MASTER ONLY mode)
-    // This function is mostly to illustrate the use of the simple uncompressed transfer mode e.g. for use in other languages.
-    // It is recommended to use the compressed transfer mode.
-    // Note: transfers are automatically timed by the interface to once per 10ms
-    // The interface sends the response 10ms after it send the previous response
-   //changed:2081-09-18 support now firmware 4.2.4. and 4.4.3.
-	bool DoTransferSimple();
-
+  
     // Do an I/O transfer with compressed data transmission.
     // This mode is always faster and more reliable than the simple mode.
-	//changed:2081-09-18 support now firmware 4.2.4. and 4.4.3.  
-    bool DoTransferCompressed();
+    // Note: transfers are automatically timed by the interface to once per 10ms
+    // The interface sends the response 10ms after it send the previous response
+    
+    /// <summary>
+    /// Do an I/O transfer.<br/>  
+    /// For the mode <see cref="ftIF2013TransferAreaComHandler::SetTransferMode"></see>
+    ///  <seealso cref="ftIF2013TransferAreaComHandler::DoTransferCompressed"></seeaslo>
+    ///  <seeaslo  cref="ftIF2013TransferAreaComHandler::DoTransferSimple"></seeaslo>
+    /// 
+    /// Compressed mode is always faster and more reliable than the simple mode.
+    /// Note: transfers are automatically timed by the interface to once per 10ms
+    /// The interface sends the response 10ms after it send the previous response
+    /// </summary>
+    /// <remarks> since 2020-06-18 </remarks>
+    /// <returns>successful </returns>
+    bool DoTransfer();
 
     // Print the most important inputs and outputs to the console
     void PrintIO( int master_ext );
@@ -152,12 +179,22 @@ protected:
     // Update timer values in transfer area
     void UpdateTimers();
 
-	/*
-   stop all motors
-   InCompressMode =true :use DoTransferCompressed else DoTransferSimple.
-   changed 2018-09-18
-   */
-    void StopMotors(bool InCompressMode);
+    // Stop all motors
+    void StopMotors();
+
+    // Do a transfer (uncompressed MASTER ONLY mode)
+  // This function is mostly to illustrate the use of the simple uncompressed transfer mode e.g. for use in other languages.
+  // It is recommended to use the compressed transfer mode.
+  // Note: transfers are automatically timed by the interface to once per 10ms
+  // The interface sends the response 10ms after it send the previous response
+    bool DoTransferSimple();
+
+    // Do an I/O transfer with compressed data transmission.
+    // This mode is always faster and more reliable than the simple mode.
+    // Note: transfers are automatically timed by the interface to once per 10ms
+    // The interface sends the response 10ms after it send the previous response
+    bool DoTransferCompressed();
+
 protected:
     // Pointer to transfer area to which this transfer handler shall transfer data
     FISH_X1_TRANSFER * m_transferarea;
@@ -178,6 +215,7 @@ protected:
     unsigned int m_info_version;
 
     // Data structures for compressed transfer
+    bool IsCompressedMode = true; //default compressed mode
     size_t m_buffersize;
     struct ftIF2013Command_ExchangeDataCmpr *m_exchange_cmpr_command;
     struct ftIF2013Response_ExchangeDataCmpr *m_exchange_cmpr_response;
@@ -191,4 +229,29 @@ protected:
     unsigned char *m_camerabuffer;
 };
 
+/*!
+ * @brief I2C bus speed definitions
+ * @remark TXT (2020-06-11) always runs in the 400kHz mode
+ */
+#define I2C_SPEED_100_KHZ       0  /*!< I2C bus clock speed */
+#define I2C_SPEED_400_KHZ       1  /*!< I2C bus clock speed */
+
+class ftIF2013TransferAreaComHandlerEx : public ftIF2013TransferAreaComHandler
+{
+protected:
+   
+public:
+    ftIF2013TransferAreaComHandlerEx(FISH_X1_TRANSFER* transferarea, int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000") :
+        ftIF2013TransferAreaComHandler(transferarea, nAreas, name, port)
+    {
+
+
+    };
+
+    ~ftIF2013TransferAreaComHandlerEx() {
+    
+    };
+
+ 
+};
 #endif // ftProInterface2013TransferAreaCom_H

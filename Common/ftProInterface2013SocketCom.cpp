@@ -23,7 +23,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Implementation details for module ftProInterface2013SocketCom
+// Implementation details for module ftProInterface2013SoecketCom
 //
 // see also:
 //
@@ -39,7 +39,7 @@ extern "C" {
     typedef unsigned long       UINT32;
 #endif
 
-#include "FtShmem.h"
+#include "FtShmemTxt.h"
 }
 
 #include "ftProInterface2013SocketCom.h"

@@ -35,10 +35,10 @@ using namespace std;
 int main()
 {
     // Create transfer area (for maximum number of extensions)
-    TransArea = new FISH_X1_TRANSFER[IF08_MAX];
+    TransArea = new FISH_X1_TRANSFER[IF_TXT_MAX];
 
     // Create communication handler
-    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.10.171" );
+    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF_TXT_MAX, "192.168.10.171" );
 
     // Initialize communication handler
     ComHandler->BeginTransfer();

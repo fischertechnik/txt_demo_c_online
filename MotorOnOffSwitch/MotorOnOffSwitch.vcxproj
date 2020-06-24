@@ -87,7 +87,8 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>
+      </GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -103,7 +104,6 @@
     <ClInclude Include="..\Common\common.h" />
     <ClInclude Include="..\Common\ftProInterface2013SocketCom.h" />
     <ClInclude Include="..\Common\ftProInterface2013TransferAreaCom.h" />
-    <ClInclude Include="..\Common\FtShmem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
