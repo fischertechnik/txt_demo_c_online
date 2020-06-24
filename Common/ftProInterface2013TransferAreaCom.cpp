@@ -203,8 +203,9 @@ ftIF2013TransferAreaComHandler::ftIF2013TransferAreaComHandler( FISH_X1_TRANSFER
     // Initialize Windows winsock
     WSADATA wsaData;
     memset( &wsaData, 0, sizeof(wsaData) );
-    WSAStartup( MAKEWORD(2,0), &wsaData );
-	cerr << "ftIF2013TransferAreaComHandler end" << endl;
+    //WSAStartup( MAKEWORD(2,0), &wsaData );
+    if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) cerr << "ftIF2013TransferAreaComHandler WSAStartup error" << endl;
+    cout << "ftIF2013TransferAreaComHandler end" << endl;
 
 }
 

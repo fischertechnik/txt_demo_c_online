@@ -5,15 +5,16 @@
 ## Replacement for the TXT-C-Programming-Kit-4-1-6
 
 2018-9-18 [CvL]
-
 2019-10-13 [CvL]
+2020-06-24
 
 This is a **draft version** for RoboPro firmware 4.2.4. up to 4.6.6: 
-**TXT-C-Programming-Kit-4-6-6_draft-01**
+**TXT-C-Programming-Kit-4-6-6_draft-02**
 
 Tested with firmware 4.6.6 and on MS-Windows 10
 
-> Development environement: MS-Visual Studio community 2017 or 2019
+> Development environement: MS-Visual Studio community  2019<br/>
+  target: dialect=C14++, recent Windows 10 version
 
 > The problem  with the Compressed mode has been resolved.
 

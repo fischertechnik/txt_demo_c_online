@@ -50,7 +50,7 @@ extern "C" {
 //****
 //******************************************************************************
 
-CRC32::CRC32()
+CRC32::CRC32() :m_table{}
 {
     m_crc=0xffffffff;
 
@@ -312,7 +312,7 @@ UINT16 ExpansionBuffer::GetUINT16()
 {
     assert( m_word_count < max_word_count );
 
-    UINT16 word;
+    UINT16 word=0;
 
     if( m_nochange_count )
     {

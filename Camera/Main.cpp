@@ -29,7 +29,7 @@
 
 FISH_X1_TRANSFER *TransArea;
 ftIF2013TransferAreaComHandler *ComHandler;
-
+std::string fnBase = "H:/Log/RoboProImg_";
 using namespace std;
 
 int main()
@@ -38,7 +38,7 @@ int main()
     TransArea = new FISH_X1_TRANSFER[IF08_MAX];
 
     // Create communication handler
-    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.10.160" );
+    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.10.171" );
 
     // Initialize communication handler
     ComHandler->BeginTransfer();
@@ -75,9 +75,9 @@ int main()
             if( ftProJpegDec( buffer, size, yuv, yuvsize, &bytes_read) )
             {
                 // Write YUV file (typically YUV422 interleaved, depends on camera)
-                std::ostringstream filename;
-                filename << "RoboProImage_" << iLoop << ".yuv";
-                ofstream file( filename.str().c_str(), ofstream::binary | ofstream::trunc );
+                std::ostringstream filenameC;
+                filenameC << fnBase << iLoop << ".yuv";
+                ofstream file( filenameC.str().c_str(), ofstream::binary | ofstream::trunc );
                 file.write( (char*)yuv, yuvsize );
                 file.close();
             }
@@ -89,7 +89,7 @@ int main()
 
             // Write JPEG
             std::ostringstream filename;
-            filename << "RoboProImage_" << iLoop << ".jpg";
+            filename << fnBase << iLoop << ".jpg";
             ofstream file( filename.str().c_str(), ofstream::binary | ofstream::trunc );
             file.write( (char*)buffer, size );
             file.close();

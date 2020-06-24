@@ -44,7 +44,7 @@ int main()
     TransArea = new FISH_X1_TRANSFER[IF08_MAX];
     
     // Create communication handler
-    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.10.160","65000" );
+    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF08_MAX, "192.168.10.171","65000" );
 	cout << "Main: ComHandler creation done=" << endl;
 		int motorId = 0; //motor M1
 		int sensorId = 5;//distance sensor on I6

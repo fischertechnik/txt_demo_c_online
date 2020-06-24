@@ -38,8 +38,10 @@
 #include <setjmp.h>
 
 extern "C" {
+//#pragma warning(disable : 4996)
 #include "jpeglib.h"
 #include "jerror.h"
+//#pragma warning(default : 4996)
 };
 
 /* Read JPEG image from a memory segment  (This already exists in jpeglib v8) */
