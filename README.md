@@ -24,7 +24,7 @@ After downloading the solution, it is directly usable with MS Visual Studio 2019
 #### `MotorOnOffSwitch` map
 Starters project to learn how the TA (transfer area can be used)
 
-#### `TestProj02` map (new June 2020)
+#### `TestProj02` map
 This project shows:
 1. The basics for a communication remote <=> TXT thread.
 2. Some examples about how to use the encoder motor in the enhanced mode.
