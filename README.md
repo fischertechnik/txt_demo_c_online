@@ -54,7 +54,10 @@ The communication over IP is using 3 ports: 65000 for the TA and commands, 65001
     Is about the decoding of the raw camera data into JPEG CODEX format.
 1. Jpeg<br/>
   The distribution contains the sixth public release of the Independent JPEG
-  Group's free JPEG software     
+  Group's free JPEG software <br/>
+  [Still-image compression – JPEG-1 extensions](http://ijg.org/files/T-REC-T.871-201105-I!!PDF-E.pdf)<br/>
+  [The JPEG Still Picture Compression Standard, description](http://ijg.org/files/Wallace.JPEG.pdf) <br/> 
+  [JPEG 9 info](https://jpegclub.org/reference/reference-sources/)  
     
 For you as end-user there is no need to fully understand the contend of these class.
 
