@@ -76,7 +76,7 @@ int main()
             {
                 // Write YUV file (typically YUV422 interleaved, depends on camera)
                 std::ostringstream filenameC;
-                filenameC << fnBase << iLoop << ".yuv";
+                filenameC << fnBase << iLoop <<"_x.yuv";
                 ofstream file( filenameC.str().c_str(), ofstream::binary | ofstream::trunc );
                 file.write( (char*)yuv, yuvsize );
                 file.close();
@@ -89,7 +89,7 @@ int main()
 
             // Write JPEG
             std::ostringstream filename;
-            filename << fnBase << iLoop << ".jpg";
+            filename << fnBase << iLoop << "_x.jpg";
             ofstream file( filename.str().c_str(), ofstream::binary | ofstream::trunc );
             file.write( (char*)buffer, size );
             file.close();

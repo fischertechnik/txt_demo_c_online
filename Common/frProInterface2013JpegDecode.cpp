@@ -47,7 +47,7 @@ extern "C" {
 /* Read JPEG image from a memory segment  (This already exists in jpeglib v8) */
 static void init_source (j_decompress_ptr cinfo) {}
 
-static wxjpeg_boolean fill_input_buffer (j_decompress_ptr cinfo)
+static /*wxjpeg_*/boolean fill_input_buffer (j_decompress_ptr cinfo)
 {
     ERREXIT(cinfo, JERR_INPUT_EMPTY);
     return TRUE;

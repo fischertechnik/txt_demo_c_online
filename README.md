@@ -64,8 +64,14 @@ For you as end-user there is no need to fully understand the contend of these cl
 ####
 
 ## History
+### 2020-06-27 [CvL]
+This is a **beta version** for RoboPro 4.6.6/4.7.0 pre-release: 
+**TXT-C-Programming-Kit-4-6-6_beta-03**
+
+>jpeg library from version 6d (27-Mar-1998) to  [version 9d (2-Jan-2020)](http://ijg.org/)
+
 ### 2020-06-24 [CvL]
-This is a **draft version** for RoboPro 4.6.6: 
+This is a **beta version** for RoboPro 4.6.6/4.7.0 pre-release:  
 **TXT-C-Programming-Kit-4-6-6_beta-02**
 
 Tested with firmware 4.6.6 and on MS-Windows 10 (64 bits)
