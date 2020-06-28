@@ -1,4 +1,3 @@
-
 # TXT C Remote (on-line mode) examples
 ## Contact 
 > If you have any questions, problems or suggestions, please contact us: fischertechnik-technik@fischer.de
@@ -64,14 +63,32 @@ For you as end-user there is no need to fully understand the contend of these cl
 ####
 
 ## History
+
+### 2020-06-28 [CvL]
+The `TA communication` thread has been moved from the application to the Txt Lib.
+See also example `TestProg2`.
+``` C
+/*!
+*  @brief Start the communication thread for the TA with the TXT
+* @return 0=successful, 1=thread is already running
+*/
+int TaComThreadStart();
+/*!
+* @brief Stop the communication thread for the TA with the TXT
+*/
+int TaComThreadStop();
+/*!
+ * @return The TaComThread is running.
+* @return 0=successful, 1=thread is already not running
+ */
+bool TaComThreadIsRunning(); 
+```
 ### 2020-06-27 [CvL]
-This is a **beta version** for RoboPro 4.6.6/4.7.0 pre-release: 
+Published **beta version** for RoboPro 4.6.6/4.7.0 pre-release: 
 **TXT-C-Programming-Kit-4-6-6_beta-03**
 
->jpeg library from version 6d (27-Mar-1998) to  [version 9d (2-Jan-2020)](http://ijg.org/)
-
 ### 2020-06-24 [CvL]
-This is a **beta version** for RoboPro 4.6.6/4.7.0 pre-release:  
+Published  **draft version** for RoboPro 4.6.6: 
 **TXT-C-Programming-Kit-4-6-6_beta-02**
 
 Tested with firmware 4.6.6 and on MS-Windows 10 (64 bits)
