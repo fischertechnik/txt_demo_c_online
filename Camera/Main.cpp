@@ -16,7 +16,9 @@
 // - Receive 20 frames, decode to YUV422 and save as YUV and JPEG
 //   The missing EOI is fixed in images received from the ft camera
 // - Stop camera server
-//
+///////////////////////////////////////////////////////////////////////////////
+//update 2020-06-26[CvL]
+// jpeg library update to Version 9d (2-Jan-2020)
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <time.h>
@@ -26,11 +28,14 @@
 
 #include "../Common/ftProInterface2013TransferAreaCom.h"
 #include "../Common/ftProInterface2013JpegDecode.h"
+using namespace std;
 
 FISH_X1_TRANSFER *TransArea;
 ftIF2013TransferAreaComHandler *ComHandler;
-std::string fnBase = "H:/Log/RoboProImg_";
-using namespace std;
+const std::string fnBase = "H:/Log/RoboProImg_";
+const std::string MyIP = "192.168.10.171";
+const std::string TaPort = "65000";
+
 
 int main()
 {
@@ -38,7 +43,7 @@ int main()
     TransArea = new FISH_X1_TRANSFER[IF_TXT_MAX];
 
     // Create communication handler
-    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF_TXT_MAX, "192.168.10.171" );
+    ComHandler = new ftIF2013TransferAreaComHandler( TransArea, IF_TXT_MAX, MyIP.c_str(), TaPort.c_str());
 
     // Initialize communication handler
     ComHandler->BeginTransfer();
