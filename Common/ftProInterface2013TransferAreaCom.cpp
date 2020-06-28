@@ -48,6 +48,9 @@
 #include <ws2tcpip.h>
 #include <memory.h>
 #include <time.h>
+#include <thread>
+#include <type_traits>
+#include <chrono>
 
 #include "ftProInterface2013TransferAreaCom.h"
 #include "ftProInterface2013SocketCom.h"
@@ -511,7 +514,11 @@ bool ftIF2013TransferAreaComHandler::DoTransferSimple()
 
 bool ftIF2013TransferAreaComHandler::DoTransfer()
 {
-    return (IsCompressedMode) ? DoTransferCompressed() : DoTransferSimple();
+    bool res= (IsCompressedMode) ? DoTransferCompressed() : DoTransferSimple();
+#ifdef TEST	
+    cout << "DoTransfer end="<<res << endl;
+#endif 
+    return res;
 }
 
 
@@ -1110,6 +1117,72 @@ void ftIF2013TransferAreaComHandler::StopMotors()
     }
     this->DoTransfer();
 }
+/****************************************************************************/
+/*   ftIF2013TransferAreaComHandlerEx::   Communication thread                    */
+/****************************************************************************/
+void ftIF2013TransferAreaComHandlerEx::thread_TAcommunication(std::future<void> futureObj) {
+#ifdef TEST	
+    std::cout << "Thread Start" << std::endl;
+#endif	
+    bool stop = false;
+    if (!this->BeginTransfer())
+    {
+        cerr << "thread_TAcommunication: Error: BeginTransfer" << endl;
+        stop = true;
+    }
+#ifdef TEST	
+    else		cout << "thread_TAcommunication: BeginTransfer done" << endl;
+#endif	
+    while (!stop && (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout))
+    {
+        if (!this->DoTransfer())
+        {
+            cerr << "thread_TAcommunication: Error DoTransfer break" << endl;	stop = true;
+        }
+#ifdef TEST
+        else cout << "thread_TAcommunication:Transfer " << stop << endl;
+#endif	
+        //DoTransfer will wait for 10 msec between two transfers.
+        std::this_thread::sleep_for(std::chrono::milliseconds(7)); // Sleep for a little to prevent blocking
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(20)); // 
+    this->EndTransfer();
+#ifdef TEST	
+    std::cout << "thread_TAcommunication: Thread End" << std::endl;
+#endif	        
+};
+
+int ftIF2013TransferAreaComHandlerEx::TaComThreadStart() {
+    if (thread1.joinable()) {
+        std::cout << "TaComThreadStart: TA communication thread is already running." << std::endl;
+        return 1; };
+    //Fetch std::future object associated with promise
+    futureObj = exitSignal.get_future();
+    // Starting Thread & move the future object in lambda function by reference
+    //https://stackoverflow.com/questions/10673585/start-thread-with-member-function
+    thread1 = std::thread([=] {thread_TAcommunication(std::move(futureObj)); });
+    return 0;
+};
+
+int ftIF2013TransferAreaComHandlerEx::TaComThreadStop() {
+    if (!thread1.joinable()) {
+        std::cout << "TaComThreadStop: TA communication thread is already not running." << std::endl;
+        return 1;
+    };
+    std::cout << "Asking Thread to Stop" << std::endl;
+    //Set the value in promise
+    exitSignal.set_value();
+
+    thread1.join();
+    std::cout << "Thread join" << std::endl;
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    return 0;
+};
+bool ftIF2013TransferAreaComHandlerEx::TaComThreadIsRunning() {
+    return thread1.joinable();
+};
 /****************************************************************************/
 /*   ftIF2013TransferAreaComHandlerEx::   I2C section                       */
 /****************************************************************************/

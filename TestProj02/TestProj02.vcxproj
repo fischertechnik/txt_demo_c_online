@@ -64,6 +64,9 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DiagnosticsFormat>Column</DiagnosticsFormat>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -84,6 +87,7 @@
       <DiagnosticsFormat>Column</DiagnosticsFormat>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

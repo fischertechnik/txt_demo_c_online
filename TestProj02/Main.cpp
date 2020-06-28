@@ -39,9 +39,9 @@
 
 #include <iostream>
 #include "conio.h"
-#include <thread>
+//#include <thread>
 #include <chrono>
-#include <future>
+//#include <future>
 #include <time.h>
 #include <fstream>
 #include <sstream>
@@ -73,40 +73,6 @@ ftIF2013TransferAreaComHandlerEx* ComHandler;
 char input = ' ';
 std::mutex TA_mutex;
 bool stopWhile = false;
-
-/* Thread which take care of the communication betweem the TXT and the remote TA
-*/
-void thread_TAcommunication(std::future<void> futureObj) {
-#ifdef TEST	
-	std::cout << "Thread Start" << std::endl;
-#endif	
-	bool stop = false;
-
-	if (!ComHandler->BeginTransfer())
-	{
-		cerr << "thread_TAcommunication: Error: BeginTransfer" << endl;
-		stop = true;
-	}
-#ifdef TEST	
-	else		cout << "thread_TAcommunication: BeginTransfer done" << endl;
-#endif	
-	while (!stop && (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout))
-	{
-		if (!ComHandler->DoTransfer())
-		{
-			cerr << "thread_TAcommunication: Error DoTransfer break" << endl;	stop = true;
-		}
-		//DoTransfer will wait for 10 msec between two transfers.
-		std::this_thread::sleep_for(std::chrono::milliseconds(8)); // Sleep for a little to prevent blocking
-	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(20)); // 
-	ComHandler->EndTransfer();
-#ifdef TEST	
-	std::cout << "thread_TAcommunication: Thread End" << std::endl;
-#endif	        
-};
-
-
 
 
 void PrintInfo(FISH_X1_TRANSFER* TransArea) {
@@ -162,22 +128,8 @@ int main()
 		return -3;
 	}
 	ComHandler->SetTransferMode(true);
-	/****************************************************************************/
-	/* setup the communication thread with the TXT                              */
-	/****************************************************************************/
-		// Create a std::promise object
-	std::promise<void> exitSignal;
-	//Fetch std::future object associated with promise
-	std::future<void> futureObj = exitSignal.get_future();
 
-	// Starting Thread & move the future object in lambda function by reference
-	//std::thread th(&threadFunction, std::move(futureObj));
-	std::thread thread1(&thread_TAcommunication, std::move(futureObj));
-	/****************************************************************************/
-	/* init the counters and exhanced motor settings                            */
-	/* after starting up the TXT and the communication thread,                  */
-	/* the handsake needs to be initialized.                                    */
-	/****************************************************************************/
+	int res=ComHandler->TaComThreadStart();
 	PrintInfo(TransArea);
 	TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out.motor_ex_cmd_id[IdMotorA]++;
 	TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out.motor_ex_cmd_id[IdMotorB]++;
@@ -186,7 +138,7 @@ int main()
 
 	bool ready1;
 	do {
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(4));
 		ready1 = (MftX1in->cnt_resetted[IdMotorA] == 1) && (MftX1in->cnt_resetted[IdMotorB] == 1);
 
 	} while (!ready1);
@@ -399,19 +351,16 @@ int main()
 
 	cout << endl << "Main: normal end, transfers done iLoop=" << iLoop << endl;
 	//******************************************************
+	
 	std::cout << "Asking Thread to Stop" << std::endl;
-	//Set the value in promise
-	exitSignal.set_value();
-
-	thread1.join();
-	std::cout << "Thread join" << std::endl;
+		ComHandler->TaComThreadStop();
+	std::cout << "Thread has been Stopped" << std::endl;
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-	//std::cout << "Thread join" << std::endl;
 	if (ComHandler != nullptr) delete ComHandler;	// Delete transfer area and communication area
 	if (TransArea != nullptr)  delete[] TransArea;
-	std::cout << "pause 1" << std::endl;
+	std::cout << "pause" << std::endl;
 	system("pause");
 
 	return 0;
