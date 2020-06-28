@@ -22,13 +22,28 @@
 // TO DO:
 //
 ///////////////////////////////////////////////////////////////////////////////
-//
+// 
+//Changes: 2020 - 06 - 18 C.van Leeuwen, Copyright (C) 2020
+//          It is now working for firmware 4.6.6. and 4.7.0 pre-release.
+//          Reduce the size of the TA: max=2 TXT master + TXT slave01,
+//          Add check in destructor to avoid double EndTransver
+// Changes: 2020 - 06 - 24 C.van Leeuwen, Copyright (C) 2020
+//          Choise for Simple or Compressed mode is now a setting
+//          void SetTransferMode(bool Compressed);
+//          Add class ftIF2013TransferAreaComHandlerEx
+// Changes: 2020 - 06 - 28 C.van Leeuwen, Copyright (C) 2020
+//          Add TA communication Thread in class ftIF2013TransferAreaComHandlerEx
+//          int TaComThreadStart();
+//          int TaComThreadStop();
+//          bool TaComThreadIsRunning();
+///////////////////////////////////////////////////////////////////////////////
 // Usage details for module ftProInterface2013TransferAreaCom
 //
 // ===== Thread safety =====
 // 
 // The transfer class is generally not thread safe. In multi threaded applications
 // It is recommended to run the data transfer in a separate thread.
+// See TaComThread in class ftIF2013TransferAreaComHandlerEx
 //
 // There is one exception: GetCameraFrameJpeg uses a separate socket and can be
 // called from a separate thread. So if the camera is used, it makes sense to
@@ -50,12 +65,6 @@
 
 
 #include <winsock2.h>
-
-/*
-
-Camera
-
-*/
 
 #include <future>
 extern "C" {

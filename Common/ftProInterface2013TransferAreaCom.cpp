@@ -27,17 +27,18 @@
 //
 // see also:
 ///////////////////////////////////////////////////////////////////////////////
-// Changes: 2018-09-18 C .van Leeuwen
+// Changes: 2018-09-18 C .van Leeuwen, Copyright (C) 2020
 //          Add some firmware 4.2.4 variable to the communication.
 //          It is now working for firmware 4.4.3.
 //          Made some adjust so that the Simple mode is working too.
-//Changes:  2019 - 06 - 18 C.van Leeuwen
+// Changes: 2019-06-18 C.van Leeuwen, Copyright (C) 2020
 //          Commpressed mode is working, update of the TA
-// Changes: 2020 - 06 - 18 C.van Leeuwen
+// Changes: 2020-06-18 C.van Leeuwen, Copyright (C) 2020
 //          It is now working for firmware 4.6.6. and 4.7.0 pre-release.
 //          Reduce the size of the TA: max=2 TXT master + TXT slave01,
 //          Add check in destructor to avoid double EndTransver
-//          
+// Changes: 2020-06-28 C.van Leeuwen, Copyright (C) 2020
+//          Add TA communication Thread          
 ///////////////////////////////////////////////////////////////////////////////
 
 #define _CRT_SECURE_NO_WARNINGS
