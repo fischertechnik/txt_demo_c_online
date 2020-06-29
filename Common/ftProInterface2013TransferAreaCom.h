@@ -132,8 +132,8 @@ public:
 	/// <summary>
 	/// Do an I/O transfer.<br/>  
 	/// For the mode <see cref="ftIF2013TransferAreaComHandler::SetTransferMode"></see>
-	///  <seealso cref="ftIF2013TransferAreaComHandler::DoTransferCompressed"></seeaslo>
-	///  <seeaslo  cref="ftIF2013TransferAreaComHandler::DoTransferSimple"></seeaslo>
+	///  <seealso cref="ftIF2013TransferAreaComHandler::DoTransferCompressed"></seealso>
+	///  <seeaslo  cref="ftIF2013TransferAreaComHandler::DoTransferSimple"></seealso>
 	/// 
 	/// Compressed mode is always faster and more reliable than the simple mode.
 	/// Note: transfers are automatically timed by the interface to once per 10ms
@@ -251,13 +251,13 @@ class ftIF2013TransferAreaComHandlerEx : public ftIF2013TransferAreaComHandler
 protected:
 
 	/* Thread which take care of the communication betweem the TXT and the remote TA
-    */
+    */ 
 	void thread_TAcommunication(std::future<void> futureObj);
 	/* part of the communication thread
 	*/
-	std::promise<void> exitSignal;// Create a std::promise object
-	std::future<void> futureObj;// = exitSignal.get_future();
-	std::thread  thread1=thread();
+	std::promise<void>  exitSignal;// Create a std::promise object
+	std::future<void>  futureObj; // = exitSignal.get_future();
+	std::thread thread1= thread();
 
 public:
 	ftIF2013TransferAreaComHandlerEx(FISH_X1_TRANSFER* transferarea, int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000") :

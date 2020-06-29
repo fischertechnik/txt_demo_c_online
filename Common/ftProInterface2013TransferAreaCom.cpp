@@ -1134,7 +1134,7 @@ void ftIF2013TransferAreaComHandlerEx::thread_TAcommunication(std::future<void> 
 #ifdef TEST	
     else		cout << "thread_TAcommunication: BeginTransfer done" << endl;
 #endif	
-    while (!stop && (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout))
+    while (!stop && futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
     {
         if (!this->DoTransfer())
         {
@@ -1154,27 +1154,32 @@ void ftIF2013TransferAreaComHandlerEx::thread_TAcommunication(std::future<void> 
 };
 
 int ftIF2013TransferAreaComHandlerEx::TaComThreadStart() {
-    if (thread1.joinable()) {
+   this->exitSignal = (promise<void>());
+ 
+  // this->thread1 = &thread();
+   
+    if (this->thread1.joinable()) {
         std::cout << "TaComThreadStart: TA communication thread is already running." << std::endl;
-        return 1; };
-    //Fetch std::future object associated with promise
-    futureObj = exitSignal.get_future();
+        return 1; }; 
+   this->futureObj = (this->exitSignal.get_future());
+ 
     // Starting Thread & move the future object in lambda function by reference
     //https://stackoverflow.com/questions/10673585/start-thread-with-member-function
-    thread1 = std::thread([=] {thread_TAcommunication(std::move(futureObj)); });
+ 
+    this->thread1 = std::thread([=] {thread_TAcommunication(std::move(this->futureObj)); });
     return 0;
 };
 
 int ftIF2013TransferAreaComHandlerEx::TaComThreadStop() {
-    if (!thread1.joinable()) {
+    if (!this->thread1.joinable()) {
         std::cout << "TaComThreadStop: TA communication thread is already not running." << std::endl;
         return 1;
     };
     std::cout << "Asking Thread to Stop" << std::endl;
     //Set the value in promise
-    exitSignal.set_value();
+    this->exitSignal.set_value();
 
-    thread1.join();
+    this->thread1.join();
     std::cout << "Thread join" << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -1182,7 +1187,7 @@ int ftIF2013TransferAreaComHandlerEx::TaComThreadStop() {
     return 0;
 };
 bool ftIF2013TransferAreaComHandlerEx::TaComThreadIsRunning() {
-    return thread1.joinable();
+    return this->thread1.joinable();
 };
 /****************************************************************************/
 /*   ftIF2013TransferAreaComHandlerEx::   I2C section                       */
