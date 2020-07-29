@@ -1,0 +1,399 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "TestProj01"
+    </assembly>
+    <members>
+        <member name="F:ComHandler">
+            <summary>
+Command handler 
+</summary>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetCBCounterResetted(=FUNC:System.Void(System.UInt32!System.Runtime.CompilerServices.IsLong,System.UInt32!System.Runtime.CompilerServices.IsLong))">
+            <summary />
+            <param name="fpCounterResetted" />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetMicLog(ShmIfId_TXT)">
+            <summary>
+N.6.4 Get microphone data compressed(logarithmic)
+</summary>
+            <remarks> does not work in Simple mode</remarks>
+            <param name="shmId">master or slave controller</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetMicLin(ShmIfId_TXT)">
+            <summary>
+N.6.3 Get microphone data
+</summary>
+            <remarks> does not work in Simple mode</remarks>
+            <param name="shmId">Master or slave TXT controller</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsSoundReady(ShmIfId_TXT)">
+            <summary>
+N.6.2 Check if the activated sound has been finished
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetSound(ShmIfId_TXT,System.UInt16,System.UInt16)">
+            <summary>
+N.6.1 Activate a sound file with index and repeat it.
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="index" />
+            <param name="repeat" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetJoystickButSwi(ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;)">
+            <summary>
+N.5.3 Get data from a switch or button
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="dev">Which fischertechnik IR-controller</param>
+            <param name="button" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetJoystickFull(ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;)">
+            <summary>
+N.5.2 Get full data  [-15..0..15] from one of the 4 full axis
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="dev">Which fischertechnik IR-controller</param>
+            <param name="axis" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetJoystickPart(ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;)">
+            <summary>
+N.5.1 Get partial data [0..15] from one of the 8 halve axis. 
+The full axis have been spilt up in parts. 
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="dev">Which fischertechnik IR-controller</param>
+            <param name="axis" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetInIOValueAnalogue(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+N.3.2 returns the value. The [shmId:idx, configuration] needs to be okay, 
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <returns>value or -1=error and see log file</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetInIOValueBinary(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+N.3.1 returns the state. The [shmId:idx, configuration] needs to be okay,
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <returns>state; in case of error see log file</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetInIOValue(ShmIfId_TXT,&lt;unknown type&gt;,System.Int16*!System.Runtime.CompilerServices.IsImplicitlyDereferenced,System.Boolean*!System.Runtime.CompilerServices.IsImplicitlyDereferenced)">
+            <summary>
+3.17 General, get the Input [shmId:idx] result
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <param name="ftValue">value</param>
+            <param name="overrun">value is out of range</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetInCntState(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+3.18A Get the logical value of the counter [shmId:idx]
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <returns>Logical value,state</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetInCntCount(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+3.18B Get the numeric value of the counter [shmId:idx]
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <returns>counter value</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetInCounterValue(ShmIfId_TXT,&lt;unknown type&gt;,System.Int16*!System.Runtime.CompilerServices.IsImplicitlyDereferenced,System.Boolean*!System.Runtime.CompilerServices.IsImplicitlyDereferenced)">
+            <summary>
+3.18 General get the state of the counter [shmId:idx]
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <param name="count">numeric value</param>
+            <param name="state">logical value, state</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartCounterReset(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+3.6 Start the reset action of  counter [shmId:idx]
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="idx" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsCntResetReady(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+3.6A Has the counter [shmId:idx] been resetted?
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="mIdx" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetOutPwmValues(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32*!System.Runtime.CompilerServices.IsImplicitlyDereferenced)">
+            <summary>
+ N.2.3 Get the value of the Output outIdx
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="outIdx" />
+            <param name="duty" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StopMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+3.14 Stop Motor output mIdx and reset the enhance mode
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="mIdx" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StopAllMotorExCmd(ShmIfId_TXT)">
+            <summary>
+3.15 Stops al the motors, set the distances on 0 and remove the master slave relations (reset the enhanced mode)
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsMotorExReady(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+N.2.2 Enhanced motor mode, has the motor reach his position?
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="mIdx" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32,&lt;unknown type&gt;,System.Int32)">
+            <summary>
+(3.13B)Enhance motor control, Master  Motor in enhance mode.
+</summary>
+            <param name="shmId">Enhanced motor control, Master only in enhance mode. Distance only.</param>
+            <param name="mIdx" />
+            <param name="duty" />
+            <param name="mDirect">direction of the master motor</param>
+            <param name="pulses">number of pulses before stop, 1 rotation =xx pulses.</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetOutPwmValues(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32)">
+            <summary>
+3.9 Set the duty for outIdx. Needs to be configurated as single mode.
+</summary>
+            <param name="shmId" />
+            <param name="outIdx" />
+            <param name="duty" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetOutMotorValues(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32*!System.Runtime.CompilerServices.IsImplicitlyDereferenced)">
+            <summary>
+N.2.1 Get the motor power value
+</summary>
+            <param name="shmId" />
+            <param name="motorId" />
+            <param name="power">returns a value between =512..0..512</param>
+            <returns>Error if the Motor is cofigurated as 2 single Outputs</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetOutMotorInverse(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+N.2.2 Inverse the direction of the motor
+</summary>
+            <param name="shmId" />
+            <param name="motorId" />
+            <returns>Error if the Motor is cofigurated as 2 single Outputs</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetOutMotorValues(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32)">
+            <summary>
+3.8B Activates a Motor output, with combine direction and duty.
+<seealso>SetOutMotorValues(ShmIfId_TXT shmId, Motor motorId, int duty, Direction direction) </seealso></summary>
+            <param name="shmId" />
+            <param name="motorId" />
+            <param name="power">   -512..0..512  (- =CCW and +=CW)</param>
+            <returns>Error if the Motor is cofigurated as 2 single Outputs</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetOutMotorValues(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32,&lt;unknown type&gt;)">
+            <summary>
+3.8A Activates a Motor output
+</summary>
+            <param name="shmId" />
+            <param name="motorId" />
+            <param name="duty">0..512</param>
+            <param name="direction">1=CW, 0 halt, -1=CCW</param>
+            <returns>Error if the Motor is cofigurated as 2 single Outputs</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtMotorConfig(ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean)">
+            <summary>
+3.12 Configurate the Motor/ Output mode
+</summary>
+            <param name="shmId" />
+            <param name="idxMotor" />
+            <param name="status">true means Motor (full bridge), false means Output mode (half bridge)</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtUniConfig(ShmIfId_TXT,&lt;unknown type&gt;,fischertechnik.txt.ids.InputMode,System.Boolean)">
+            <summary>
+3.10 Configurate the Universal Input
+</summary>
+            <param name="shmId" />
+            <param name="idxIO" />
+            <param name="mode" />
+            <param name="digital" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtCntConfig(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32)">
+            <summary>
+3.11 Configurate the Counter Input
+</summary>
+            <param name="shmId" />
+            <param name="iCnt" />
+            <param name="mode"> 1= rising edge, 0 falling edge</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.ftxIsTransferActiv">
+            <summary>
+3.3 Is the communication thread still running?
+</summary>
+            <returns>Is running</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.ftxStopTransferArea">
+            <summary>
+3.2 stop the communication thread
+</summary>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.ftxStartTransferArea">
+            <summary>
+3.1 start the communication thread and configere the Motor/Outputs, Inputs and Counters.
+</summary>
+            <remarks> The configurations need to be set before!  </remarks>
+            <returns>success or error</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetTransferAreasArrayAddr">
+            <summary>
+3.4
+</summary>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.Dispose">
+            <summary>
+3.0B
+</summary>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.#ctor(System.Int32,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,LogLevel)">
+            <summary>
+3.0A
+</summary>
+            <param name="nAreas" />
+            <param name="name" />
+            <param name="port" />
+            <param name="logMapName" />
+            <param name="logLevel" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandlerEx1.StopI2C">
+            <summary>
+Stop the I2C communication
+However the communication protocol itself is not available
+</summary>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandlerEx1.StartI2C">
+            <summary>
+Start the I2C communication
+However the communication protocol itself is not available
+</summary>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.PrintIR(ShmIfId_TXT)">
+            <summary>
+Print the IR info to the console
+</summary>
+            <param name="master_ext" />
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.PrintIO(ShmIfId_TXT)">
+            <summary>
+ Print the most important inputs and outputs to the console
+</summary>
+            <param name="master_ext" />
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.SetTransferMode(System.Boolean)">
+            <summary>
+Set the transfer mode <br />
+Default is Compressed.
+</summary>
+            <param name="Compressed"> Simple mode =false: no compression only for master<br /> 
+Compression mode = true: works for both only master and master+ slave.</param>
+            <remarks> since 2020-06-18<br />  MicLog and MicLin do not work in the Simple mode</remarks>
+            <returns />
+        </member>
+        <member name="T:fischertechnik.txt.ids.FtErrors">
+            <summary>
+The error's
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.IrButSwi">
+            <summary>
+IR controller button/switches
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.IrAxisP">
+            <summary>
+IR controller partial joystick axis (0=middle..+15) 
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.IrAxisF">
+            <summary>
+IR controller full joystick  axis (0=middle -15..0..+15)
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.IrDev">
+            <summary>
+IR controllers 
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.InputMode">
+            <summary>
+The Universal Input modes
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.Direction">
+            <summary>
+The Directions
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.Counter">
+            <summary>
+The 4 Counter inputs
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.Input">
+            <summary>
+The 8 Inputs 
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.Output">
+            <summary>
+The 8 Output outputs
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.Motor">
+            <summary>
+The 4 Motor ouputs
+</summary>
+        </member>
+        <member name="T:LogLevel">
+            <summary />
+        </member>
+        <!-- Discarding badly formed XML document comment for member 'M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.DoTransfer'. -->
+        <!-- Discarding badly formed XML document comment for member 'M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,<unknown type>,System.Int32,<unknown type>,<unknown type>,<unknown type>,System.Int32)'. -->
+        <!-- Discarding badly formed XML document comment for member 'M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,<unknown type>,System.Int32,<unknown type>,<unknown type>,<unknown type>,<unknown type>,<unknown type>,<unknown type>,<unknown type>,System.Int32)'. -->
+    </members>
+</doc>
