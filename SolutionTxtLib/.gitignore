@@ -1,5 +1,5 @@
 #gitignore for SolutionTxtLib in \txt_demo_c_online
-#2020-07-29 [CvL]
+#2020-07-29 v1.1.2.1 [CvL]
 #
 
 Documentation/
@@ -55,3 +55,11 @@ ipch/
 !**/packages/build/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
+
+#special
+/FtTxtLib/
+/FtTctLibDll/
+/jpeg-9d/
+/src/
+/include/pch.h
+/include/framework.h
