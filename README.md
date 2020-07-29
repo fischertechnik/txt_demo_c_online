@@ -1,4 +1,5 @@
 # TXT C Remote (on-line mode) examples
+
 ## Contact 
 > If you have any questions, problems or suggestions, please contact us: fischertechnik-technik@fischer.de
 
@@ -8,80 +9,67 @@ Replacement for the original TXT-C-Programming-Kit-4-1-6
 
 ### Which tools I need?
 This is a MS-Visual Studio project. <br/>
-The `solution` and `project` are tested with
- 
+The `solution` and `project` are tested with 
 [MS-Visual Studio Community 2019](https://visualstudio.microsoft.com/vs/community/) 
+which is free to download and use.<br/>
 
-and is free to download and use.<br/>
-It is using the C14++ dialect. The .NET extension is not used, so the source files can also be used with for example Eclipse.<br/>
-After downloading the solution, it is directly usable with MS Visual Studio 2019.<br/>
+The original ```SolutionOnlineSamples``` is using the **C14++ dialect** and can also be used with the Eclipse 2020-06 workbench.<br/> 
+The new split-up version (into a solution for the library and a solution for the applications) is using the **C17++ dialect**.<br/>
+After downloading an solution, it is directly usable with MS Visual Studio 2019.<br/>
 
+### Overview of available MS-Visual Studio 2019 solutions.
+The original ```OnlineSamples``` structure contains a mixer of the low level library stuff and end-user applications. This structure has been split up now. This will make the use in for example an educational setting must easier. The end-user needs only ```SolutionTxtApps``` and can add his projects to it.<br/>
+The intention is to extended the library  with higher level functions as there were available in the ROBO-interface and TC-controller kits. 
 
+1. ```SolutionTxtApps```
+  Applications which are using the ```FtTxtLib``` or ```FtTxtLibDll``` library, including these libs, updates of the original example applications and some test examples.<br/> 
+  - The library supports the communication thread now.
+  - It also support a set of higher level API functions as they were also present in the TX-C and Robo-interface programming kits. Like (part of the class ```ftIF2013TransferAreaComHandlerEx2```):
+    - ```ftxStartTransferArea```, ```ftxStopTransferArea```, ```ftxIsTransferActiv```, ```GetTransferAreasArrayAddr```
+    - ```StartMotorExCmd```,  ```IsMotorExReady```
+    - ```SetOutMotorValues```, ```GetOutMotorValues```, ```SetOutMotorInverse```
+    - ```SetOutPwmValues```, ```GetOutPwmValues```
+    - ```SetFtUniConfig```, ```SetFtMotorConfig```, ```SetFtCntConfig```
+    - ```GetInIOValue```
+    - ```SetSound, IsSoundReady```
+    - ```GetMicLin```, ```GetMicLog```
+  - [See also the API user manual](./SolutionTxtLib/API-user-manual/0-Start-remote-TXT-API(FtTxtLib-FtTxtLibDll).md)   
+1. ```SolutionTxtLib```
+  The project to create the static library ```FtTxtLib```  and a dynamic link library (DLL) ```FtTxtLibDll```. <br/>
+>  Will be come available later. 
 
-### Overview of the example code
-
-#### `MotorOnOffSwitch` map
-Starters project to learn how the TA (transfer area can be used)
-
-#### `TestProj02` map
-This project shows:
-1. The basics for a communication remote <=> TXT thread.
-2. Some examples about how to use the encoder motor in the enhanced mode.
-
-#### `Camera` map
-Is about how to get the camera images on your remote system.     
-
-#### The `Common`  and `Jpeg` map
-This map contains the general supporting files which describe the data structures (transfer area) and the Berkeley socket (WinSocket) based communication with the TXT-controller.<br/> In fact this is a library.<br/>
-In theory, if a programming language supports Berkeley sockets, it would be possible to communicated with the TXT. See for example the [Python version FtRoboPy](https://github.com/ftrobopy/ftrobopy). MS Visual Studio 2019 can also be used for Python projects
-
-The communication over IP is using 3 ports: 65000 for the TA and commands, 65001 for the camera images and 65002 for I2C. For the last one is no protocol description available yet.
-1. FtShmemTxt.h<br/>
-  Is about the structure of the transfer area aiming for the TXT.
-1. Common<br/>
-   Header only.<br/>
-   alternative names for some data types.
-   
-2. ftProInterface2013TransferAreaCom<br/>
-   header and source.<br/>
-  Is about the compression of the data for the socket communication. 
-1. ftProInterface2013SocketCom<br/>
-    header and source.<br/>
-   Is about the compression of the data for the socket communication.
-2. frProInterface2013JpegDecode<br/>
-    header and source.<br/>
-    Is about the decoding of the raw camera data into JPEG CODEX format.
-1. Jpeg<br/>
-  The distribution contains the sixth public release of the Independent JPEG
-  Group's free JPEG software <br/>
-  [Still-image compression – JPEG-1 extensions](http://ijg.org/files/T-REC-T.871-201105-I!!PDF-E.pdf)<br/>
-  [The JPEG Still Picture Compression Standard, description](http://ijg.org/files/Wallace.JPEG.pdf) <br/> 
-  [JPEG 9 info](https://jpegclub.org/reference/reference-sources/)  
+1. ```SolutionOnlineSamples```
+    The original ```OnlineSamples```.
     
-For you as end-user there is no need to fully understand the contend of these class.
-
-####
 
 ## History
-
-### 2020-06-28 [CvL]
+### 2020-07-16/30 [(c) CvL, TesCaweb.nl]
+**TXT-C-Programming-Kit-4-6-6_beta-04**
+Re-development of the solution structure.
+Re-introduction of a set of higher level API functions. 
+  
+### 2020-06-28 [(c) CvL, TesCaweb.nl]
 The `TA communication` thread has been moved from the application to the Txt Lib.
 See also example `TestProg2`.
 ``` C
-/*!
-*  @brief Start the communication thread for the TA with the TXT
-* @return 0=successful, 1=thread is already running
-*/
-int TaComThreadStart();
-/*!
-* @brief Stop the communication thread for the TA with the TXT
-*/
-int TaComThreadStop();
-/*!
- * @return The TaComThread is running.
-* @return 0=successful, 1=thread is already not running
- */
-bool TaComThreadIsRunning(); 
+  /// <summary>
+  /// 3.1 start the communication thread and configere the Motor/Outputs, Inputs and Counters.
+  /// </summary>
+  /// <remarks> The configurations need to be set before!  </remarks>
+  /// <returns>success or error</returns>
+  FtErrors ftxStartTransferArea();
+
+  /// <summary>
+  /// 3.2 stop the communication thread
+  /// </summary>
+  /// <returns>success or error </returns>
+  FtErrors ftxStopTransferArea();
+
+   /// <summary>
+   /// 3.3 Is the communication thread still running?
+   /// </summary>
+   /// <returns>Is runningr</returns>
+  bool   ftxIsTransferActiv();
 ```
 ### 2020-06-27 [CvL]
 Published **beta version** for RoboPro 4.6.6/4.7.0 pre-release: 

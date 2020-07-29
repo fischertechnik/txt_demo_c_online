@@ -15,7 +15,7 @@
 //         Move the TA communication thread to the TxtLib
 //         Added some more options
 //changes: 2020-06-29 [CvL]
-//         Some test to discover the exact behavior of the enhanced motor control.
+//         Some test to discover the exact behaviour of the enhanced motor control.
 //         See notes.
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -30,7 +30,7 @@
 // 
 // Notes:
 // 1) The first time after a "enhanced motor control reset", the motor will run a distance without a "enhanced motor start".
-// 2) An increment of the “motor_ex_cmd_id” (“start command” ) has as consequents that the counter has been resetted by the TXT too.
+// 2) An increment of the “motor_ex_cmd_id” (“start command” ) has as consequents that the counter has been reset by the TXT too.
 //      This without cnt_resetted notification.
 //      There is no increment of the counter with the new distance.
 //
@@ -93,7 +93,7 @@ void PrintInfo(FISH_X1_TRANSFER* TransArea) {
 	int MotPowerA1 = MftX1out.duty[IdMotorA], MotPowerB1 = MftX1out.duty[IdMotorB];
 	int MotPowerA2 = MftX1out.duty[IdMotorA+1], MotPowerB2 = MftX1out.duty[IdMotorB+1];
 	cout << "*******************************************************************************" << endl;
-	cout << " Counter      A, B =[ " << CntA << ", " << CntB << " ]; Counters resetted = " << CntReady << endl;
+	cout << " Counter      A, B =[ " << CntA << ", " << CntB << " ]; Counters reset = " << CntReady << endl;
 	cout << " Distance     A, B =[ " << MotDistA << ", " << MotDistB << " ]; Motors ready = " << MotReady << endl;
 	cout << " Master Motor A, B =[M" << MotMasA << ", M" << MotMasB << "] M0 means has no master" << endl;
 	cout << " Motor Power  MotA =[ " << MotPowerA1 << ", " << MotPowerA2 <<
@@ -110,7 +110,7 @@ int main()
 {
 
 	FISH_X1_TRANSFER* TransArea = new FISH_X1_TRANSFER[IF_TXT_MAX];
-	// Example is using the master, some abrviations. Optional use.
+	// Example is using the master, some abbreviations. Optional use.
 	//THis to show different way to address the data with a pointer.
 	FTX1_INPUT* MftX1in = &TransArea[ShmIfId_TXT::LOCAL_IO].ftX1in;
 	FTX1_OUTPUT* MftX1out = &TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out;
@@ -236,8 +236,8 @@ int main()
 				//reset the counters and wait until ready
 				//The cnt_resetted will be set by the ftProInterface2013 interface when ready.
 				// Note: A start motor sychro will also reset the counters.
-				MftX1in->cnt_resetted[IdMotorA] = 0;//needs to be resetted by the user
-				MftX1in->cnt_resetted[IdMotorB] = 0;//needs to be resetted by the user
+				MftX1in->cnt_resetted[IdMotorA] = 0;//needs to be reset by the user
+				MftX1in->cnt_resetted[IdMotorB] = 0;//needs to be reset by the user
 				TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out.cnt_reset_cmd_id[IdMotorA]++;
 				TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out.cnt_reset_cmd_id[IdMotorB]++;
 				bool ready3;
@@ -286,8 +286,8 @@ int main()
 				//Enhanced motor step 1: set values
 
 				MftX1outDis[IdMotorA] = counterA;	MftX1outDis[IdMotorB] = counterA;
-				MftX1in->motor_ex_reached[IdMotorA] = 0;  //needs to be resetted by the user
-				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be resetted by the user
+				MftX1in->motor_ex_reached[IdMotorA] = 0;  //needs to be reset by the user
+				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be reset by the user
 
 				TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out.duty[2 * IdMotorA] = 0;
 				TransArea[ShmIfId_TXT::LOCAL_IO].ftX1out.duty[2 * IdMotorA + 1] = 140;
@@ -302,8 +302,8 @@ int main()
 			case 'l':
 
 				MftX1outDis[IdMotorA] = counterA + 20;	MftX1outDis[IdMotorB] = counterB + 20;
-				MftX1in->motor_ex_reached[IdMotorA] = 0; //needs to be resetted by the user
-				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be resetted by the user
+				MftX1in->motor_ex_reached[IdMotorA] = 0; //needs to be reset by the user
+				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be reset by the user
 				std::this_thread::sleep_for(std::chrono::milliseconds(20));
 				//MftX1out->motor_ex_cmd_id[IdMotorA]++;  //send start command
 				//MftX1out->motor_ex_cmd_id[IdMotorB]++;
@@ -326,10 +326,10 @@ int main()
 				//Enhanced motor step 2: start the black box operation
 				// Reset both the "motor_ex_reached" and "cnt_resetted",
 				// this because they are used during this operation.
-				MftX1in->motor_ex_reached[IdMotorA] = 0;  //needs to be resetted by the user
-				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be resetted by the user
-				MftX1in->cnt_resetted[IdMotorA] = 0;//needs to be resetted by the user
-				MftX1in->cnt_resetted[IdMotorB] = 0;//needs to be resetted by the user
+				MftX1in->motor_ex_reached[IdMotorA] = 0;  //needs to be reset by the user
+				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be reset by the user
+				MftX1in->cnt_resetted[IdMotorA] = 0;//needs to be reset by the user
+				MftX1in->cnt_resetted[IdMotorB] = 0;//needs to be reset by the user
 
 				MftX1out->motor_ex_cmd_id[IdMotorA]++;  //send start command
 				MftX1out->motor_ex_cmd_id[IdMotorB]++;
@@ -341,10 +341,10 @@ int main()
 				MftX1outDis[IdMotorB] += (MftX1outDis[IdMotorB] > 160) ? -150 : +480;
 				// Reset both the "motor_ex_reached" and "cnt_resetted",
 				// this because they are used during this operation.
-				MftX1in->motor_ex_reached[IdMotorA] = 0; //needs to be resetted by the user
-				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be resetted by the user
-				MftX1in->cnt_resetted[IdMotorA] = 0;//needs to be resetted by the user
-				MftX1in->cnt_resetted[IdMotorB] = 0;//needs to be resetted by the user
+				MftX1in->motor_ex_reached[IdMotorA] = 0; //needs to be reset by the user
+				MftX1in->motor_ex_reached[IdMotorB] = 0;//needs to be reset by the user
+				MftX1in->cnt_resetted[IdMotorA] = 0;//needs to be reset by the user
+				MftX1in->cnt_resetted[IdMotorB] = 0;//needs to be reset by the user
 
 				//	MftX1out->motor_ex_cmd_id[IdMotorA]++;
 				//	MftX1out->motor_ex_cmd_id[IdMotorB]++;

@@ -1,0 +1,46 @@
+#gitignore for SolutionOnLineSamples in \txt_demo_c_online
+#2020-07-29 [CvL]
+#
+Documentation/
+*.vcxproj.user
+.vs/
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+/[Dd]ebug/
+/[Rr]elease/
+#Except the exe
+/![Rr]elease/Camera.exe
+/![Rr]elease/MotorOnOffSwitch.exe
+/![Rr]elease/TestProj02.exe
+#
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# If using the old MSBuild-Integrated Package Restore, uncomment this:
+#!**/packages/repositories.config
