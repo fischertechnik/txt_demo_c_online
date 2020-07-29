@@ -53,7 +53,7 @@ ipch/
 
 # NuGet Packages
 *.nupkg
-packages.config
+
 # The packages folder can be ignored because of Package Restore
 **/packages/*
 # except build/, which is used as an MSBuild target.
