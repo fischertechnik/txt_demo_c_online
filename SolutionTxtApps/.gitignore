@@ -10,20 +10,20 @@ Documentation/
 *.sln.docstates
 
 # Build results
-/Camera/[Dd]ebug
-/MotorOnOffSwitch/[Dd]ebug
-/TestProjIrControl/[Dd]ebug
-/TestProj1/[Dd]ebug
-/TestProj2/[Dd]ebug
+Camera/[Dd]ebug
+MotorOnOffSwitch/[Dd]ebug
+TestProjIrControl/[Dd]ebug
+TestProj1/[Dd]ebug
+TestProj2/[Dd]ebug
 
-/Camera/[Rr]elease
-/MotorOnOffSwitch/[Rr]elease
-/TestProjIrControl/[Rr]elease
-/TestProj1/[Rr]elease
-/TestProj2/[Rr]elease
-/[Dd]ebug/*.xml
-/[Rr]elease/*.iobj
-/[Rr]elease/*.ipb
+Camera/[Rr]elease
+MotorOnOffSwitch/[Rr]elease
+TestProjIrControl/[Rr]elease
+TestProj1/[Rr]elease
+TestProj2/[Rr]elease
+[Dd]ebug/*.xml
+[Rr]elease/*.iobj
+[Rr]elease/*.ipb
 ftlib.log
 ftlib.bak
 # except 
@@ -53,6 +53,7 @@ ipch/
 
 # NuGet Packages
 *.nupkg
+packages.config
 # The packages folder can be ignored because of Package Restore
 **/packages/*
 # except build/, which is used as an MSBuild target.
