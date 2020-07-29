@@ -1,5 +1,5 @@
 #gitignore for SolutionTxtApps in \txt_demo_c_online
-#2020-07-29 [CvL]
+#2020-07-29 v1.1.2.2[CvL]
 #
 Documentation/
 *.vcxproj.user
@@ -21,7 +21,9 @@ Documentation/
 /TestProjIrControl/[Rr]elease
 /TestProj1/[Rr]elease
 /TestProj2/[Rr]elease
-
+/[Dd]ebug/*.xml
+/[Rr]elease/*.iobj
+/[Rr]elease/*.ipb
 # except 
 !/[Dd]ebug/
 !/[Rr]elease/
