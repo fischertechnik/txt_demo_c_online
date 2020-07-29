@@ -13,14 +13,14 @@ Documentation/
 **/Camera/[Dd]ebug/
 **/MotorOnOffSwitch/[Dd]ebug/
 **/TestProjIrControl/[Dd]ebug/
-**/TestProj1/[Dd]ebug/*
-**/TestProj2/[Dd]ebug/*
+**/TestProj01/[Dd]ebug/
+**/TestProj02/[Dd]ebug/
 
-**/Camera/[Rr]elease/*
+**/Camera/[Rr]elease/
 **/MotorOnOffSwitch/[Rr]elease/
 **/TestProjIrControl/[Rr]elease/
-**/TestProj1/[Rr]elease/
-**/TestProj2/[Rr]elease/
+**/TestProj01/[Rr]elease/
+**/TestProj02/[Rr]elease/
 [Dd]ebug/*.xml
 *.iobj
 *.ipdb
