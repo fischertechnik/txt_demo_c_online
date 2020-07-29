@@ -10,20 +10,20 @@ Documentation/
 *.sln.docstates
 
 # Build results
-Camera/[Dd]ebug/
-MotorOnOffSwitch/[Dd]ebug/
-TestProjIrControl/[Dd]ebug/
-TestProj1/[Dd]ebug/
-TestProj2/[Dd]ebug/
+Camera/[Dd]ebug/*
+MotorOnOffSwitch/[Dd]ebug/*
+TestProjIrControl/[Dd]ebug/*
+TestProj1/[Dd]ebug/*
+TestProj2/[Dd]ebug/*
 
-Camera/[Rr]elease/
-MotorOnOffSwitch/[Rr]elease/
-TestProjIrControl/[Rr]elease/
-TestProj1/[Rr]elease/
-TestProj2/[Rr]elease/
+Camera/[Rr]elease/*
+MotorOnOffSwitch/[Rr]elease/*
+TestProjIrControl/[Rr]elease/*
+TestProj1/[Rr]elease/*
+TestProj2/[Rr]elease/*
 [Dd]ebug/*.xml
 *.iobj
-*.ipb
+*.ipdb
 ftlib.log
 ftlib.bak
 # except 
