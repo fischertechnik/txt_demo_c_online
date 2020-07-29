@@ -24,6 +24,8 @@ Documentation/
 /[Dd]ebug/*.xml
 /[Rr]elease/*.iobj
 /[Rr]elease/*.ipb
+ftlib.log
+ftlib.bak
 # except 
 !/[Dd]ebug/
 !/[Rr]elease/
