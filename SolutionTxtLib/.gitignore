@@ -15,7 +15,16 @@ Documentation/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+#special
+/FtTxtLib/*
+/FtTxtLibDll/*
+/jpeg-9d/
+/src/
+/include/pch.h
+/include/framework.h
+SolutionTxtLib.sln
 # except 
+!/FtLibs/
 !/FtLibs/[Dd]ebug/
 !/FtLibs/[Rr]elease/
 
@@ -56,10 +65,4 @@ ipch/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 
-#special
-/FtTxtLib/
-/FtTctLibDll/
-/jpeg-9d/
-/src/
-/include/pch.h
-/include/framework.h
+
