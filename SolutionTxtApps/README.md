@@ -1,9 +1,7 @@
 
 # Information about the use of the SolutionTxtApps.
-This Visual Studio solution contains some examples about remote programming for the fischertechnik TXT controller. This with the use of the FtTxtLib.<br/>
-THe FtTxtLib can be used as static or as dynamic (dll) library.<br/>
-Switching between static and dynamic library is no too difficult.<br/>
-This FtTxtLib has been extended with the communication thread. <br/>
+This Visual Studio solution contains some examples about remote programming for the fischertechnik TXT controller. This with the use of the FtTxtLib. The FtTxtLib can be used as static or as dynamic (dll) library. Switching between static and dynamic library is not too difficult.<br/>
+This FtTxtLib has been extended with the communication thread and a set of higher level API's. 
 With this approach, the structure that was in use with the TX-Controler and the Robo-Interface is similar now.
 
 
@@ -17,22 +15,27 @@ C++ language standard: ISO C++17 Standard (std:c++17).<br/>
 
 ### About the remote TXT API functionality
 
-[See: remote TXT API user manual](./API-user-manual/0-Start-remote-TXT-API(FtTxtLib-FtTxtLibDll).md)
-for the functionality of the ```fischertechnik::txt::remote::api::ftIF2013TransferAreaComHandlerEx2```. 
+See: [remote TXT API user manual](./API-user-manual/0-Start-remote-TXT-API(FtTxtLib-FtTxtLibDll).md)
+for the functionality of the `fischertechnik::txt::remote::api::ftIF2013TransferAreaComHandlerEx2`. 
 
-The project ```TestProj01```, ```Camera```, ```MotorOnOffSwitch``` and  ```TestProjIrControl```give examples of the use of the remote TXT API's. 
+The projects:
+- `TestProj01`, 
+- `Camera`,
+- `MotorOnOffSwitch` 
+- `TestProjIrControl`
 
+gives examples of the use of the remote TXT API's. 
 
 ## Overview of the FtTxt library and the accompanying include files.
-The FtTxt library files are present in the solution root directory ```FtLibs```. There is a ```Release``` and a ```Debug``` version.<br/>
+The FtTxt library files are present in the solution root directory `FtLibs`. There is a `Release` and a `Debug` version.<br/>
 ![typical FtLib set  ](./docs/Lib(03).png)
 
-If a application is using the DLL version, the FtTxtLibDll.dll needs to be present in the same directory as the application (```.exe```).<br/>
-The accompanying include files are present in the solution root directory ```Includes```.<br/>
+If a application is using the DLL version, the FtTxtLibDll.dll needs to be present in the same directory as the application (`.exe`).<br/>
+The accompanying include files are present in the solution root directory `Includes`.<br/>
 ![Includes  ](./docs/Lib(02).png)
 
 ### How to incorporate these lib, dll and includes in your projects?
-The ```FtTxtLib.h``` is multi funcional. The static library FtTxtLib.lib will be used if ```_LIB``` has been defined in C/C++ Preprocessor definition.<br/>
+The `FtTxtLib.h` is multi functional. The static library FtTxtLib.lib will be used if `_LIB` has been defined in C/C++ Preprocessor definition.<br/>
  ![Includes  ](./docs/Lib(04).png)
 
  
@@ -86,5 +89,5 @@ Show to use of an actuator and a sensor.<br/>
 ![Additional library  ](./docs/MotorOnOffSwitch_1.png)
 
 # Document history
-- (c) 2020-07-14 TesCaWeb.nl [C van Leeuwen] 466.1.1 new
+- (c) 2020-07-14/31 TesCaWeb.nl [C van Leeuwen] 466.1.1 new
 
