@@ -6,8 +6,7 @@
 Replacement for the original TXT-C-Programming-Kit-4-1-6
 
 ## Overview
-These programming kit for the development of remote applications for the fischertechnik TXT controller contains a library which takes for the communication with the TXT and offers a rich set of higher level API to the end-user. But is also still possible to program directly on TA (transfer area) level.
-
+This programming kit for the development of remote applications for the fischertechnik TXT controller contains a library which takes for the communication with the TXT and offers a rich set of higher level API to the end-user. But is also still possible to program directly on TA (transfer area) level.
 
 ### Which tools I need?
 The `solutions` and `projects` are developed and tested with 
@@ -20,7 +19,7 @@ After downloading a solution, it is directly usable with MS Visual Studio 2019.<
 
 ### Overview of the available MS-Visual Studio solutions.
 The original `OnlineSamples` structure contains a mixer of the low level library stuff and end-user applications and has been split up into a library solution and a application solution now.
-The library has been extended with simular higher level functions as there were available in the ROBO-interface and TC-controller programming kits.
+The library has been extended with similar higher level functions as there were available in the ROBO-interface and TC-controller programming kits.
 The end-user needs only `SolutionTxtApps` and can add his projects to it; this solution is also to download directly as .zip file.<br/>
 
 1.  [`SolutionTxtApps`](./SolutionTxtApps/README.md) 
@@ -48,9 +47,18 @@ The end-user needs only `SolutionTxtApps` and can add his projects to it; this s
 1. [`SolutionOnlineSamples`](./SolutionOnlineSamples/README.md)
     
     The original `OnlineSamples`.
-    
+
+## About the PowerShell script `Copy(FtTxtLib).ps1`
+This [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7) script takes care for the distribution of the result files from the `SolutionTxtLib` into `SolutionTxtApps`.
+
+##  Transfer Area (TA)
+[An introduction about the structure of the transfer area](https://github.com/fischertechnik/txt_demo_c_download/blob/master/TransferArea.md).  
 
 # History
+- 2020-08-07 [(c) CvL, TesCaweb.nl]
+
+Minor changes. 
+ 
 - 2020-07-16/30/31 [(c) CvL, TesCaweb.nl]
 
 **TXT-C-Programming-Kit-4-6-6_beta-04**

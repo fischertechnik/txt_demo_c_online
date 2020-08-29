@@ -12,18 +12,20 @@
 //              |   August 2018 by ??????
 //              |              extended for the TXT firmware 4.2.4
 //              |             tested with TXT firmware 4.4.3
-//              |  June 2020  bij [CvL] 
+//              |  June 2020  by [CvL] 
 //              |             add some additional comment.
 //              |             tested with TXT firmware 4.6.0/4.7.0 pre-release
 //              |             updated to MS-Visual Studio 2019 dialect C14++/C17++, Windows 10
 //                            number of devices adapted to the TXT master + 1 slave
 //                            Add I2C bus speed
+//              |Augustus 2020 by [CvL] Add some structs. 
 //-----------------------------------------------------------------------------
 
 #ifndef __FT_SHMEMTxt_H__
 // Protect against multiple file inclusion
 #define __FT_SHMEMTxt_H__
 #include <stdint.h>
+
 namespace fischertechnik {
 	namespace txt {
 		namespace ids {
@@ -85,6 +87,15 @@ namespace fischertechnik {
 				IR_ON_ON=4//   IR Data for receivers with SW1=1  SW2=1
 			};
 			/// <summary>
+/// IR Joystick (0=middle -15..0..+15)
+/// </summary>
+			enum IrDevGroup :uint8_t {
+				JoystickLeft = 1,             
+				JoystickRight =2,             
+				Buttons=3,
+				Switches=4
+			};
+			/// <summary>
 			/// IR controller full joystick  axis (0=middle -15..0..+15)
 			/// </summary>
 			enum IrAxisF :uint8_t {
@@ -129,6 +140,20 @@ namespace fischertechnik {
 				FTLIB_ERR_UNKNOWN = 0xEFFFFFFFL
 			};
 
+			//comes from ftProInterface2013SocketCom, there two definitions is use
+
+			/// <summary>
+			/// The number of Motors, Counters, Inputs, Outputs and IR controllers
+			/// </summary>
+			enum System
+			{
+				ftIF2013_nPwmOutputs = 8,
+				ftIF2013_nMotorOutputs = 4,
+				ftIF2013_nCounters = 4,
+				ftIF2013_nUniversalInputs = 8,
+				ftIF2013_nIRChannels = 4
+			};
+			//The same in the original file
 			/// <summary>
 			/// The number of Motors, Counters, Inputs, Outputs and IR controllers
 			/// </summary>
@@ -137,6 +162,7 @@ namespace fischertechnik {
 			constexpr uint8_t IZ_MOTOR = 4;          // number of motor
 			constexpr uint8_t IZ_UNI_INPUT = 8;          // number of universal ios    
 			constexpr uint8_t IZ_IR_RECEIVER = 4;  //number of IR devices (array is 1 longer; 0 is for all
+
 		   /*!
 			* @brief I2C bus speed definitions
 			* @remark TXT (2020-06-11) always runs in the 400kHz mode
@@ -203,13 +229,14 @@ enum IFBusAdr
 #define INVALID_VALUE       -32768
 
 
-
-
-// define IF role (Application - I/O), (Local or Slave)
 // [shm_if_id_e]
+
+/// <summary>
+/// define IF role (Application - I/O), (Local or Slave)
+/// </summary>
 enum ShmIfId_TXT
 {
-	LOCAL_IO = 0,           //Id for Local I/O
+	LOCAL_IO = 0,           ///Id for Local I/O
 	REMOTE_IO_1,            //Id for Remote I/O Slave #1/TXT can have only 1 slave
 	SHM_IF_CNT               //For counting only
 };
@@ -477,7 +504,9 @@ typedef struct uni_inp_config
 {
 	UINT8           mode;        // enum InputMode  mode
 	BOOL8           digital;
-	char            dummy[2];
+	//char            dummy[2];
+	UINT8          dum01; //scale only online mode
+	UINT8          dum02;
 } UNI_CONFIG;
 
 
@@ -523,6 +552,7 @@ typedef struct ftX1input
 } FTX1_INPUT;
 
 
+
 // fish.X1 output structure, only out values, 44 bytes
 typedef struct ftX1output
 {
@@ -557,15 +587,16 @@ typedef struct _transfer_status
 
 
 // change fields for UniIO, Counter, Timer, Update status, 8 bytes
+
 typedef struct _change_state
 {
 	UINT16          UpdInterface;
 	UINT8           ChangeStatus;
 	UINT8           ChangeUni;
-	UINT8           ChangeCntIn;
+	UINT8            ChangeCntIn;
 	UINT8           ChangeCounter;
 	UINT8           ChangeTimer;
-	UINT8           reserved;
+	UINT8           unused;
 } CHANGE_STATE;
 
 

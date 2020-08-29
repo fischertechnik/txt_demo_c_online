@@ -248,5 +248,5 @@ All transfer areas (master + up to 1 slave) are stored in this memory area.  For
 
 
 # Document history
-Version 1.1.2.1
+Version 1.1.2.2
 (c) 2020 TesCaWeb ing. C. van Leeuwen Btw.

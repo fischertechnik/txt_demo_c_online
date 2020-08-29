@@ -57,15 +57,7 @@ namespace fischertechnik {
 			//*
 			//******************************************************************************
 
-			enum System
-			{
-				ftIF2013_nPwmOutputs = 8,
-				ftIF2013_nMotorOutputs = 4,
-				ftIF2013_nCounters = 4,
-				ftIF2013_nUniversalInputs = 8,
-				ftIF2013_nIRChannels = 4
-			};
-
+			
 			//******************************************************************************
 			//*
 			//* Definitions

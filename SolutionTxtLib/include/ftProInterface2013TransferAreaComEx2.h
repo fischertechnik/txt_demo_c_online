@@ -1,41 +1,33 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File:    ftProInterface2013TransferAreaCom.h
+// File:    ftProInterface2013TransferAreaComEx2.h
 //
 // Project: ftPro - fischertechnik Control Graphical Programming System
 //
-// Module:  Transfer area based communication protocol with interface 2013
+// Module:  Extensie to ftProInterface2013TransferAreaCom.h  and ftProInterface2013TransferAreaComEx1.h
 //
-// Author:  Michael Sögtrop
-//
-///////////////////////////////////////////////////////////////////////////////
-//
-// Urheberrecht im Sinne des Urheberrechtsgesetzes bei
-//
-// Michael Sögtrop
-// Germany
-//
-// Copyright (C) 2015
+// Author:  C.van Leeuwen, Copyright (C) 2020
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
 // TO DO:
 //
 ///////////////////////////////////////////////////////////////////////////////
-// 
-//Changes: 2020 - 06 - 18 C.van Leeuwen, Copyright (C) 2020
-//          It is now working for firmware 4.6.6. and 4.7.0 pre-release.
-//          Reduce the size of the TA: max=2 TXT master + TXT slave01,
-//          Add check in destructor to avoid double EndTransver
-// Changes: 2020 - 06 - 24 C.van Leeuwen, Copyright (C) 2020
-//          Choise for Simple or Compressed mode is now a setting
-//          void SetTransferMode(bool Compressed);
-//          Add class ftIF2013TransferAreaComHandlerEx2
+// Changes: 2020 - 08 - 25 C.van Leeuwen, Copyright (C) 2020
+//          Add callbacks
 // Changes: 2020 - 06 - 28 C.van Leeuwen, Copyright (C) 2020
 //          Add TA communication Thread in class ftIF2013TransferAreaComHandlerEx2
 //          int ftxStartTransferArea();
 //          int ftxStopTransferArea();
-//          bool TaComThreadIsRunning();
+//          bool TransferAreaIsRunning();
+// Changes: 2020 - 06 - 24 C.van Leeuwen, Copyright (C) 2020
+//          Choise for Simple or Compressed mode is now a setting
+//          void SetTransferMode(bool Compressed);
+//          Add class ftIF2013TransferAreaComHandlerEx2
+//Changes: 2020 - 06 - 18 C.van Leeuwen, Copyright (C) 2020
+//          It is now working for firmware 4.6.6. and 4.7.0 pre-release.
+//          Reduce the size of the TA: max=2 TXT master + TXT slave01,
+//          Add check in destructor to avoid double EndTransver
 ///////////////////////////////////////////////////////////////////////////////
 // Usage details for module ftProInterface2013TransferAreaCom
 //
@@ -66,6 +58,7 @@
 
 #include <winsock2.h>
 #include <future>
+#include <bitset>
 
 #ifdef _LIB
 #define  FtPro_API 
@@ -106,74 +99,125 @@ namespace fischertechnik {
 			/// TXT remote API's
 			/// </summary>
 			namespace api {
-				typedef struct _mask_cb {
-					// _mask_cb():uniMasks= { 0 } {  };
-					BYTE      uniMasks[SHM_IF_CNT] = { 0 };
-					BYTE      cnt_inMasks[SHM_IF_CNT] = { 0 };
-					BYTE      counterMasks[SHM_IF_CNT] = { 0 };
-				} TMASK_CB;// [2013-06-01 cvl]
-				//  TransferArea of ftMscLib (Master IF, 8 Slave IF) 
 
-				typedef struct _if08_transfer {
-
-					FISH_X1_TRANSFER	ftxTransferArea[IF_TXT_MAX];
-
-				} IF08_TRANSFER;
-
+				/**********************************************************************************************************/
+				//bind: https://stackoverflow.com/questions/28055080/how-to-set-a-member-function-as-callback-using-stdbind
+				/**********************************************************************************************************/
 				/**************************************************************************************************/
-				typedef void __stdcall tCBSlaveState(DWORD, DWORD);
-				typedef tCBSlaveState* FPCBSlaveState;
-
-				typedef void __stdcall tCBCounterResetted(DWORD, DWORD);
-				typedef tCBCounterResetted* FPCBCounterResetted;
-
-				typedef void __stdcall tCBMotoExReached(DWORD, DWORD);
-				typedef tCBMotoExReached* FPCBMotorEx;
-
-				typedef void __stdcall tCBCounterResetted2(DWORD, DWORD, void*);//[2013-06-01 cvl]
-				typedef tCBCounterResetted2* FPCBCounterResetted2;
-				typedef void __stdcall tCBMotoExReached2(DWORD, DWORD, void*);//[2013-06-01 cvl]
-				typedef tCBMotoExReached2* FPCBMotorEx2;//[2013-06-01 cvl]
-				typedef void __stdcall tCBUniChanged(DWORD, DWORD, INT16, BOOL16, UINT8, BOOL8, void*);//[2013-06-10 cvl]
-				typedef tCBUniChanged* FPCBUniChanged;//[2013-06-01 cvl]
-				typedef void __stdcall tCBCntInChanged(DWORD, DWORD, BYTE, void*);//[2013-06-01 cvl]
-				typedef tCBCntInChanged* FPCBCntInChanged;//[2013-06-01 cvl]
-				typedef void __stdcall tCBCounterChanged(DWORD, DWORD, INT16, UINT8, void*);//[2013-06-01 cvl]
-				typedef tCBCounterChanged* FPCBCounterChanged;//[2013-06-01 cvl]
-				/**************************************************************************************************/
-
+				//Start class
 				/**************************************************************************************************/
 
 				class FtPro_API ftIF2013TransferAreaComHandlerEx2 : public ftIF2013TransferAreaComHandlerEx1
 				{
 				protected:
 
-				private:
 					/* Thread which take care of the communication between the TXT and the remote TA
 					*/
 					void thread_TAcommunication(std::future<void> futureObj);
 					/* part of the communication thread
 					*/
-
 					std::promise<void>  exitSignal;// Create a std::promise object
 					std::future<void>  futureObj;// = exitSignal.get_future();
 					std::thread   thread1 = thread();
 					ftIF2013TransferAreaComHandlerEx2(FISH_X1_TRANSFER* transferarea, int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000", const char* logMapName = ".\\", LogLevel logLevel = LogLevel::LvLOGERR);
 
-				public:
+
+
+				protected:
+					//FtErrors IsHandleValid();
+					//FtErrors   errCode = FtErrors::FTLIB_ERR_SUCCESS;
+
+
+
+
+					FtErrors SetDuty(FTX1_OUTPUT* pOut, Motor motorId, int duty, Direction direction);
+
+
+					//old functions, still internal in use.
+					FtErrors   StartFishX1MotorExCmd(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection, Motor sIdx, Direction sDirection, int pulses);
+					FtErrors   StartFishX1MotorExCmd4(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection
+						, Motor s1Idx, Direction s1Direction, Motor s2Idx, Direction s2Direction, Motor s3Idx, Direction s3Direction
+						, int pulses);//[2013-06-05 CvL]
+						/**/
+
 					/// <summary>
-					/// 3.0A
+					/// Do a transfer (uncompressed MASTER ONLY mode
+					/// This function is mostly to illustrate the use of the simple uncompressed transfer mode e.g. for use in other languages.
+					/// It is recommended to use the compressed transfer mode.
+					/// Note: transfers are automatically timed by the interface to once per 10ms
+					/// The interface sends the response 10ms after it send the previous response
 					/// </summary>
-					/// <param name="nAreas"></param>
-					/// <param name="name"></param>
-					/// <param name="port"></param>
-					/// <param name="logMapName"></param>
-					/// <param name="logLevel"></param>
-					/// <returns></returns>
+					/// <returns>successful</returns>
+					virtual bool DoTransferSimple();
+
+					/// <summary>
+					/// Do an I/O transfer with compressed data transmission.
+					/// This mode is always faster and more reliable than the simple mode.
+					/// Note: transfers are automatically timed by the interface to once per 10ms
+					/// The interface sends the response 10 to +/- 30ms after it send the previous response.<br/>
+					/// Only in this mode are the callbacks optional active.
+					/// </summary>
+					/// <returns>successful</returns>
+
+					virtual bool DoTransferCompressed();
+
+				public:
+					/*********************************************************************************/
+					/* Callback's definitions (signatures)*/
+					 /*********************************************************************************/
+					/// <summary>
+					/// T.N.8.10 The Digital Universal Input [shmId,  id]  has changed into [state]
+					/// </summary>
+					typedef std::function<void(ftIF2013TransferAreaComHandlerEx2* object, ShmIfId_TXT shmId, Input id, bool state)> tCbUniInputDigChanged;
+					/// <summary>
+					/// T.N.8.12 The Motor  [shmId,  id] (in enhance mode)  has reached its [position].
+					/// </summary>
+					/// <param name="object">pointer to the caller instance</param>
+					/// <param name="messageId">Id of the start MotorEx, .</param>
+					typedef std::function<void(ftIF2013TransferAreaComHandlerEx2* object, ShmIfId_TXT shmId, Motor id, uint16_t position, uint16_t messageId)> tCbMotorReached;
+					/// <summary>
+					/// T.N.8.11A Callback for the reset of C counter  [shmId,  id] has been finshed.
+					/// </summary>
+					///<remarks>only after calling StartCounterReset (a user reset), not after a reset by the system.<remarks>
+					/// <param name="object">pointer to the caller instance</param>
+					/// <param name="messageId">Id of the reset ready confirmation, >1 user reset, 1 init or motor enhance start.</param>
+					typedef std::function<void(ftIF2013TransferAreaComHandlerEx2* object, ShmIfId_TXT shmId, Counter id, uint16_t messageId)> tCbCntResetReady;
+					/// <summary>
+					///  T.N.8.11B Callback for the C counter  [shmId,  id] has changed, last known [count]
+					/// </summary>
+					/// <param name="object">pointer to the caller instance</param>
+					typedef std::function<void(ftIF2013TransferAreaComHandlerEx2* object, ShmIfId_TXT shmId, Counter id, uint16_t count)> tCbCount;
+					/// <summary>
+					///  T.N.8.20 Callback for the TA communication, direct after the send and received inputs (TaCompleted)
+					/// </summary>
+					/// <param name="object">pointer to the caller instance</param>
+					typedef std::function<void(ftIF2013TransferAreaComHandlerEx2* object)> tCbTaCompleted;
+					/// <summary>
+					///  T.N.8.21 Callback for the fischertechnik IR-controller (Joystick) 
+					/// </summary>
+					/// <param name="object">pointer to the caller instance</param>
+					/// <param name="shmId">Which TXT controller, master or slave</param>
+					/// <param name="id">which IR-device</param>
+					/// <param name="group">which IR-devicejoystick, Left or Right</param>
+					/// <param name="AxisX">X-as value of the joystick [-15..0..15]</param>
+					/// <param name="AxisY">Y-as value of the joystick  [-15..0..15]</param>
+					typedef std::function<void(ftIF2013TransferAreaComHandlerEx2* object, ShmIfId_TXT shmId, IrDev id, IrDevGroup group, int16_t AxisX, int16_t AxisY)> tCbTaJoyStick;
+					/*********************************************************************************/
+					/* constructor and destructor
+					 /*********************************************************************************/
+					 /// <summary>
+					 /// 3.0A constructor
+					 /// </summary>
+					 /// <param name="nAreas"></param>
+					 /// <param name="name"></param>
+					 /// <param name="port"></param>
+					 /// <param name="logMapName"></param>
+					 /// <param name="logLevel"></param>
+					 /// <returns></returns>
 					ftIF2013TransferAreaComHandlerEx2(int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000", const char* logMapName = ".\\", LogLevel logLevel = LogLevel::LvLOGERR);
 
 					/// <summary>
-						/// 3.0B
+						/// 3.0B de
 						/// </summary>
 					~ftIF2013TransferAreaComHandlerEx2();
 					/*********************************************************************************/
@@ -181,77 +225,35 @@ namespace fischertechnik {
 					 /*********************************************************************************/
 
 					 /// <summary>
-					 /// 3.4
+					 /// 3.4 Get the pointer to the Transfer area
 					 /// </summary>
-					 /// <returns></returns>
+					 /// <returns>the pointer</returns>
 					volatile FISH_X1_TRANSFER* GetTransferAreasArrayAddr();
 
-					/*!
-					*  @brief Start the communication thread for the TA with the TXT
-					* @return 0=successful, 1=thread is already running
-					*/
-
 					/// <summary>
-					/// 3.1 start the communication thread and configere the Motor/Outputs, Inputs and Counters.
+					/// 3.1 start the communication thread and configere the Motor/Outputs, Inputs and Counters.<br/>
+					/// The cycle time is betweem the 10 and +/- 40 msec.
 					/// </summary>
-					/// <remarks> The configurations need to be set before!  </remarks>
+					/// <remarks> The configurations for the TXT needs to be set before this start!  </remarks>
 					/// <returns>success or error</returns>
 					FtErrors ftxStartTransferArea();
-					/*!
-					* @brief Stop the communication thread for the TA with the TXT
-					*/
 
 					/// <summary>
 					/// 3.2 stop the communication thread
 					/// </summary>
 					/// <returns> </returns>
 					FtErrors ftxStopTransferArea();
-					/*!
-					 * @return The TaComThread is running.
-					* @return 0=successful, 1=thread is already not running
-					 */
 
-					 /// <summary>
-					 /// 3.3 Is the communication thread still running?
-					 /// </summary>
-					 /// <returns>Is running</returns>
+					/// <summary>
+					/// 3.3 Is the communication thread still running?
+					/// </summary>
+					/// <returns>Is running</returns>
 					bool   ftxIsTransferActiv();
-					/*********************************************************************************/
-					/* Bstrac control functions from older interfaces */
-					 /*********************************************************************************/
-				private:
-					FtErrors IsHandleValid();
-					TMASK_CB m_mask_cb;
-					FtErrors   errCode = FtErrors::FTLIB_ERR_SUCCESS;
-					FPCBCounterResetted CBCounterResetted = nullptr;
-					FPCBMotorEx         CBMotorExReached = nullptr;
-					FPCBCounterResetted2 CBCounterResetted2 = nullptr;//[2013-06-13 CvL]
-					FPCBMotorEx2         CBMotorExReached2 = nullptr;//[2013-06-13 CvL]
-					FPCBUniChanged         CBUniChanged = nullptr;//[2013-06-13 CvL]
-					FPCBCntInChanged         CBCntInChanged = nullptr;//[2013-06-13 CvL]
-					FPCBCounterChanged         CBCounterChanged = nullptr;//[2013-06-13 CvL]
-				  //  void* CBMultiIFState2Context = nullptr;
-					FtErrors SetDuty(FTX1_OUTPUT* pOut, Motor motorId, int duty, Direction direction);
-					void* CBCounterResetted2Context = nullptr;
-					void* CBMotorExReached2Context = nullptr;
 
-					FtErrors   StartFishX1MotorExCmd(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection, Motor sIdx, Direction sDirection, int pulses);
-					FtErrors   StartFishX1MotorExCmd4(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection
-						, Motor s1Idx, Direction s1Direction, Motor s2Idx, Direction s2Direction, Motor s3Idx, Direction s3Direction
-						, int pulses);//[2013-06-05 CvL]
-
-				public:
 					/*********************************************************************************/
 					/* Set configuration */
 					/*********************************************************************************/
-					/// <summary>
-					/// 3.11 Configurate the Counter Input
-					/// </summary>
-					/// <param name="shmId"></param>
-					/// <param name="iCnt"></param>
-					/// <param name="mode"> 1= rising edge, 0 falling edge</param>
-					/// <returns></returns>
-					FtErrors SetFtCntConfig(ShmIfId_TXT shmId, Counter iCnt, int mode);
+
 					/// <summary>
 					/// 3.10 Configurate the Universal Input
 					/// </summary>
@@ -261,14 +263,57 @@ namespace fischertechnik {
 					/// <param name="digital"></param>
 					/// <returns></returns>
 					FtErrors SetFtUniConfig(ShmIfId_TXT shmId, Input idxIO, InputMode mode, bool digital);
+
 					/// <summary>
-					/// 3.12 Configurate the Motor/ Output mode
+					/// N.8.10 (3.10A) Configurate the Universal Input, digital with callback
+					/// </summary>
+					/// <param name="shmId">master or master+slave </param>
+					/// <param name="idxIO"></param>
+					/// <param name="mode">only for digital R or V</param>
+					/// <param name="tCbUniInputDigChanged"></param>
+					/// <param name="callback">optional callback for digital input has been changed mode</param>
+					/// <returns>error if not R or V</returns>
+					/// <see>https://stackoverflow.com/questions/14189440/c-callback-using-class-member </see>
+					/// 
+					FtErrors SetFtUniConfig(ShmIfId_TXT shmId, Input idxIO, InputMode mode, tCbUniInputDigChanged callback = nullptr);
+					/// <summary>
+					/// N.8.11 (3.11)  Configurate the Counter Input
+					/// </summary>
+					/// <param name="shmId">master or slave</param>
+					/// <param name="iCnt">id counter  </param>
+					/// <param name="mode"> 1= rising edge, 0 falling edge</param>
+					/// <param name="callbackCount">optional callback for counter value has been changed mode</param>
+					/// <param name="callbackCnt">optional callback for reset has been finished.</param>
+					/// <returns>error in case of parameter errors</returns>
+					FtErrors SetFtCntConfig(ShmIfId_TXT shmId, Counter iCnt,int mode,tCbCount  callbackCount = nullptr,	tCbCntResetReady  callbackCnt = nullptr);
+					/// <summary>
+					/// N.8.12 (3.12) Configurate the Motor/ Output mode
 					/// </summary>
 					/// <param name="shmId"></param>
 					/// <param name="idxMotor"></param>
 					/// <param name="status">true means Motor (full bridge), false means Output mode (half bridge)</param>
+					/// <param name="callback">optional callback for enhance mode, motor has reached its position</param>
 					/// <returns></returns>
-					FtErrors SetFtMotorConfig(ShmIfId_TXT shmId, Motor idxMotor, bool status);
+					FtErrors SetFtMotorConfig(ShmIfId_TXT shmId, Motor idxMotor, bool status, tCbMotorReached  callback = nullptr);
+
+					/// <summary>
+					/// N.3.20 Set Callback for Transfer Area Cycle Complete (direct after a send/received
+					/// </summary>
+					/// <param name="callback">optional callback for TA transfer tick</param>
+					/// <returns></returns>
+					FtErrors SetFtTaCompleted(tCbTaCompleted  callback = nullptr);
+
+					/// <summary>
+					/// N.8.21 Set Callbacks (events) for the IT-device (Joystick controller)
+					/// </summary>
+					/// <param name="shmId">master or master+slave</param>
+					/// <param name="id">IR-controller id</param>
+					/// <param name="JsX">callback for the X axis or nullptr</param>
+					/// <param name="JsY">callback for the Y axis or nullptr</param> 
+					/// <returns>success or error</returns>
+					FtErrors SetFtCbJoyStick(ShmIfId_TXT shmId, IrDev id, tCbTaJoyStick callbackJsX = nullptr, tCbTaJoyStick  callbackJsY = nullptr);
+	
+
 					/*********************************************************************************/
 					/* Motor/Output  functions */
 					/*********************************************************************************/
@@ -317,33 +362,33 @@ namespace fischertechnik {
 					/// <returns></returns>
 					FtErrors SetOutPwmValues(ShmIfId_TXT shmId, Output outIdx, int duty);
 
-
-
 					/// <summary>
 					/// (3.13) Enhance motor control, Master and 0..1 slave motor in enhance mode.
 					/// </summary>
 					/// <param name="shmId"></param>
-					/// <param name="mIdx"></param>
-					/// <param name="duty"></param>
-					/// <param name="mDirect">direction of the master motor</param>
-					/// <param name="sIdx"0..3 index slave motor 1 or:  Motor::NoMotor  = not in use</param>
+					/// <param name="mIdx">index master motor</param>
+					/// <param name="duty">[0..512]</param>
+					/// <param name="sIdx">0..3 index slave motor 1 or:  Motor::NoMotor  = not in use</param>
+					/// <param name="mDirect">direction of the master motor</param>	
 					/// <param name="sDirect">direction of the slave 1 motor</param>
 					/// <param name="pulses"></param>
 					/// <returns></returns>	
 					FtErrors StartMotorExCmd(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection, Motor sIdx, Direction sDirection, int pulses);
 
 					/// <summary>
-					/// (3.13B)Enhance motor control, Master  Motor in enhance mode.
+					/// (3.13B)Enhance motor control, Master  Motor in enhance mode.<br/>
+					/// Generates before the start of the motor(s) also a reset for the addressed Counter(s).
 					/// </summary>
 					/// <param name="shmId">Enhanced motor control, Master only in enhance mode. Distance only.</param>
-					/// <param name="mIdx"></param>
-					/// <param name="duty"></param>
+					/// <param name="mIdx">index master motor</param>
+					/// <param name="duty">[0..512]</param>
 					/// <param name="mDirect">direction of the master motor</param>
 					/// <param name="pulses">number of pulses before stop, 1 rotation =xx pulses.</param>
-					/// <returns></returns>	
+					/// <returns>Ft-error reference.</returns>	
 					FtErrors StartMotorExCmd(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection, int pulses);
 
-					///<summary>(3.13A) Enhance motor control, Master and 0..3  slave. Motor in enhance mode..<br/>
+					///<summary>(3.13A) Enhance motor control, Master and 0..3  slave. Motor in enhance mode.<br/>
+					/// Generates before the start of the motor(s) also a reset for the addressed Counter(s).
 					///</summary>
 					///<param name='shmId'>which interface</param> 
 					///<param name='mIdx'>0..3 index master motor</param> 
@@ -356,8 +401,6 @@ namespace fischertechnik {
 					///<param name='s1Direction'>direction of the slave 1 motor</param> 
 					///<param name='s2Direction'>direction of the slave 2 motor</param> 
 					///<param name='s3Direction'>direction of the slave 3 motor</param> 
-					///<remarks>1 rotation =xx pulses <paramref name=”pulses”/> stop after these pulse with a notification.</remarks>
-					///<remarks> Motor::NoMotor = not in use: <paramref name=”s1Idx”/> <paramref name=”s2Idx”/><paramref name=”s3Idx”/>This slave is not in use</remarks>
 					///<returns> Ft-error reference.</returns>
 					FtErrors StartMotorExCmd(ShmIfId_TXT shmId, Motor mIdx, int duty, Direction mDirection
 						, Motor s1Idx, Direction s1Direction, Motor s2Idx, Direction s2Direction, Motor s3Idx, Direction s3Direction
@@ -365,12 +408,19 @@ namespace fischertechnik {
 
 
 					/// <summary>
-					/// N.2.2 Enhanced motor mode, has the motor reach his position?
+					/// N.2.2 Enhanced motor mode, has the motor reached his position?
 					/// </summary>
 					/// <param name="shmId">Master or slave TXT controller</param>
 					/// <param name="mIdx"></param>
 					/// <returns></returns>
 					bool IsMotorExReady(ShmIfId_TXT shmId, Motor mIdx);
+					/// <summary>
+					/// 3.14 Stop Motor output mIdx, set the distance on 0 and remove the master slave relation (reset the enhance mode)
+					/// </summary>
+					/// <param name="shmId">Master or slave TXT controller</param>
+					/// <param name="mIdx"></param>
+					/// <returns></returns>
+					FtErrors StopMotorExCmd(ShmIfId_TXT shmId, Motor mIdx);
 
 					/// <summary>
 					/// 3.15 Stops al the motors, set the distances on 0 and remove the master slave relations (reset the enhanced mode)
@@ -378,14 +428,6 @@ namespace fischertechnik {
 					/// <param name="shmId">Master or slave TXT controller</param>
 					/// <returns></returns>
 					FtErrors StopAllMotorExCmd(ShmIfId_TXT shmId);
-
-					/// <summary>
-					/// 3.14 Stop Motor output mIdx and reset the enhance mode
-					/// </summary>
-					/// <param name="shmId">Master or slave TXT controller</param>
-					/// <param name="mIdx"></param>
-					/// <returns></returns>
-					FtErrors StopMotorExCmd(ShmIfId_TXT shmId, Motor mIdx);
 
 					/// <summary>
 					///  N.2.3 Get the value of the Output outIdx
@@ -422,7 +464,7 @@ namespace fischertechnik {
 					/// <param name="idx"></param>
 					/// <param name="count">numeric value</param>
 					/// <param name="state">logical value, state</param>
-					/// <returns></returns>
+					/// <returns>error</returns>
 					FtErrors GetInCounterValue(ShmIfId_TXT shmId, Counter idx, INT16& count, bool& state);
 
 					/// <summary>
@@ -534,61 +576,20 @@ namespace fischertechnik {
 					/// <param name="shmId">master or slave controller</param>
 					/// <returns></returns>
 					UINT16 GetMicLog(ShmIfId_TXT shmId);
-
-				private:
-					/*********************************************************************************/
-					//2013-06-14 Cvl] set callback functions
-					//                The callback for the individual Universal Inputs, Counter Change and Counter Input need
-					//                to be activate by setting the mask.
-					/*********************************************************************************/
-					/*********************************************************************************/
-					/* call backs   not implemented yet*/
-					/*********************************************************************************/
-
-					void  SetCBUniChanged(FPCBUniChanged fpUniEx
-					/* void(__stdcall*)(DWORD, DWORD, INT16, BOOL16, UINT8, BOOL8, void*)*/);//2013-06-14 Cvl]
-
-					void  SetCBMotorExReached(FPCBMotorEx fpMotorEx /* void(__stdcall*)(DWORD, DWORD)*/);
-
-					// C++ friedly version for this callback
-					void  SetCBMotorExReached2(FPCBMotorEx2 fpMotorEx  /* void(__stdcall*)(DWORD, DWORD, void*)*/);
-
-
-					// C++ friedly version for this callback
-					void  SetCBRoboExtState2(
-						void(__stdcall*)(DWORD, DWORD, void*));//2013-06-14 Cvl]
 					/// <summary>
-					///  
+					/// The number of active slaves.
 					/// </summary>
-					/// <param name="fpCounterResetted"></param>
-					void  SetCBCounterResetted(FPCBCounterResetted fpCounterResetted /*void(__stdcall*)(DWORD, DWORD)*/);
-					// C++ friedly version for this callback
-					void  SetCBCounterResetted2(
-						void(__stdcall*)(DWORD, DWORD, void*));//2013-06-14 Cvl]
-					void  SetCBCntInChanged(
-						void(__stdcall*)(DWORD, DWORD, BYTE, void*));////2013-06-14 Cvl]
+					/// <returns></returns>
+					int  IsSlaveActive();
+				protected:
 
-					void  SetCBCounterChanged(
-						void(__stdcall*)(DWORD, DWORD, INT16, UINT8, void*));//2013-06-14 Cvl]
-
-
-					 /*********************************************************************************/
-					//                Get-set mask for  sensors.
-					//                set and get function to allow that a certain Counter or Universal
-					//                will use their callback functions
-					//                in case the value of this input change.
-					 /*********************************************************************************/
-
-					FtErrors  SetCBMaskUniChanged(ShmIfId_TXT shmId, BYTE mask);//2013-06-14 Cvl]
-					FtErrors  SetCBMaskCntInChanged(ShmIfId_TXT shmId, BYTE mask);//2013-06-14 Cvl]
-					FtErrors  SetCBMaskCounterChanged(ShmIfId_TXT shmId, BYTE mask);//2013-06-14 Cvl]
-				   //..........
-					FtErrors  GetCBMaskUniChanged(ShmIfId_TXT shmId, BYTE* mask);//2013-06-14 Cvl]
-					FtErrors  GetCBMaskCntInChanged(ShmIfId_TXT shmId, BYTE* mask);//2013-06-14 Cvl]
-					FtErrors  GetCBMaskCounterChanged(ShmIfId_TXT shmId, BYTE* mask);//2013-06-14 Cvl]
-					/*********************************************************************************/
-
-
+					tCbUniInputDigChanged  ArCbUniInputDigChanged[SHM_IF_CNT][IZ_UNI_INPUT] = { {nullptr} };//new 2020-08-15
+					tCbMotorReached  ArCbMotorReached[SHM_IF_CNT][IZ_MOTOR] = { {nullptr} };//new 2020-08-15
+					tCbCntResetReady  ArCbCntResetReady[SHM_IF_CNT][IZ_COUNTER] = { {nullptr} };//new 2020-08-15
+					tCbCount  ArCbCount[SHM_IF_CNT][IZ_COUNTER] = { {nullptr} };//new 2020-08-15
+					tCbTaCompleted CbTaCompleted = nullptr;//new 2020-08-22
+					tCbTaJoyStick ArCbTaJoyStickL[SHM_IF_CNT][IZ_IR_RECEIVER + 1] = { {nullptr} };//new 2020-08-26
+					tCbTaJoyStick ArCbTaJoyStickR[SHM_IF_CNT][IZ_IR_RECEIVER + 1] = { {nullptr} };//new 2020-08-26
 
 				};
 			} //api
