@@ -55,6 +55,10 @@ This [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview
 [An introduction about the structure of the transfer area](https://github.com/fischertechnik/txt_demo_c_download/blob/master/TransferArea.md).  
 
 # History
+- 2020-08-30 [(c) CvL, TesCaweb.nl]
+ The FtTxtLib(dll) has been extended with callbacks.<br/>
+ Resolve  issue ftxIsTransferActiv(): about TA start.
+ 
 - 2020-08-07 [(c) CvL, TesCaweb.nl]
 
 Minor changes. 

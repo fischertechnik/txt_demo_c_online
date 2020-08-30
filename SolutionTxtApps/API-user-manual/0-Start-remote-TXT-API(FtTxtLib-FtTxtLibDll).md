@@ -237,6 +237,7 @@ All transfer areas (master + up to 1 slave) are stored in this memory area.  For
 
 [7 Definition of the constants ](./7-Const.md)
 
+[8 Overview callbacks ](./8-events.md)
 
 ### Left over API functions:
 #### GetVersion
