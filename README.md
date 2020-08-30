@@ -1,14 +1,26 @@
-# TXT C/C++ Remote (on-line mode) examples
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-## Contact 
+- [TXT C/C++ Remote (on-line mode) examples](#txt-cc-remote-on-line-mode-examples)
+	- [1 Contact](#1-contact)
+	- [2 Overview](#2-overview)
+		- [2.1 Which tools I need?](#21-which-tools-i-need)
+		- [2.2 Overview of the available MS-Visual Studio solutions.](#22-overview-of-the-available-ms-visual-studio-solutions)
+	- [3 About the PowerShell script `Copy(FtTxtLib).ps1`](#3-about-the-powershell-script-copyfttxtlibps1)
+	- [4 Transfer Area (TA)](#4-transfer-area-ta)
+- [History](#history)
+
+<!-- /TOC -->
+# TXT C/C++ Remote (on-line mode) examples
+ 
+## 1 Contact 
 > If you have any questions, problems or suggestions, please contact us: fischertechnik-technik@fischer.de
 
-Replacement for the original TXT-C-Programming-Kit-4-1-6
+Replacement for the original fischertechnik TXT-C-Programming-Kit-4-1-6
 
-## Overview
+## 2 Overview
 This programming kit for the development of remote applications for the fischertechnik TXT controller contains a library which takes for the communication with the TXT and offers a rich set of higher level API to the end-user. But is also still possible to program directly on TA (transfer area) level.
 
-### Which tools I need?
+### 2.1 Which tools I need?
 The `solutions` and `projects` are developed and tested with 
 [MS-Visual Studio Community 2019](https://visualstudio.microsoft.com/vs/community/) 
 which is free to download and use.<br/>
@@ -17,7 +29,7 @@ The original `SolutionOnlineSamples` is using the **C14++ dialect** and can also
 The new split-up version (into a solution for the library and a solution for the applications) is using the **C17++ dialect**.<br/>
 After downloading a solution, it is directly usable with MS Visual Studio 2019.<br/>
 
-### Overview of the available MS-Visual Studio solutions.
+### 2.2 Overview of the available MS-Visual Studio solutions.
 The original `OnlineSamples` structure contains a mixer of the low level library stuff and end-user applications and has been split up into a library solution and a application solution now.
 The library has been extended with similar higher level functions as there were available in the ROBO-interface and TC-controller programming kits.
 The end-user needs only `SolutionTxtApps` and can add his projects to it; this solution is also to download directly as .zip file.<br/>
@@ -25,7 +37,7 @@ The end-user needs only `SolutionTxtApps` and can add his projects to it; this s
 1.  [`SolutionTxtApps`](./SolutionTxtApps/README.md) 
 
   Some examples which are using the `FtTxtLib` or `FtTxtLibDll` library, including these libs, updates of the original example applications and some test examples.<br/> 
-  - The library supports the communication thread.
+  - The library supports the communication thread and has callbacks (events) .
   - It also support a set of higher level API functions as they were also present in the TX-C and Robo-interface programming kits. Like (part of the class `ftIF2013TransferAreaComHandlerEx2`):
     - `ftxStartTransferArea`, `ftxStopTransferArea`, `ftxIsTransferActiv`, `GetTransferAreasArrayAddr`
     - `StartMotorExCmd`,  `IsMotorExReady`
@@ -36,28 +48,30 @@ The end-user needs only `SolutionTxtApps` and can add his projects to it; this s
     - `SetSound, IsSoundReady`
     - `GetMicLin`, `GetMicLog`
   
-   [See also the API user manual](./SolutionTxtLib/API-user-manual/0-Start-remote-TXT-API(FtTxtLib-FtTxtLibDll).md) 
+   [See also the API user manual](./SolutionTxtApps/API-user-manual/README.md) 
      
 1. [`SolutionTxtLib`](./SolutionTxtLib/README.md) 
   
   The project to create the static library `FtTxtLib`  and a dynamic link library (DLL) `FtTxtLibDll`. <br/>
 
-  >  Will be come available later. 
+  >  The sources Will be come available later. 
 
 1. [`SolutionOnlineSamples`](./SolutionOnlineSamples/README.md)
     
     The original `OnlineSamples`.
 
-## About the PowerShell script `Copy(FtTxtLib).ps1`
+## 3 About the PowerShell script `Copy(FtTxtLib).ps1`
 This [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7) script takes care for the distribution of the result files from the `SolutionTxtLib` into `SolutionTxtApps`.
 
-##  Transfer Area (TA)
+##  4 Transfer Area (TA)
 [An introduction about the structure of the transfer area](https://github.com/fischertechnik/txt_demo_c_download/blob/master/TransferArea.md).  
 
 # History
 - 2020-08-30 [(c) CvL, TesCaweb.nl]
- The FtTxtLib(dll) has been extended with callbacks.<br/>
- Resolve  issue ftxIsTransferActiv(): about TA start.
+
+ The FtTxtLib(dll) has been extended with [callbacks](./SolutionTxtApps/API-user-manual/8-events.md).<br/>
+ 
+ > Resolve  issue ftxIsTransferActiv(): about TA start.
  
 - 2020-08-07 [(c) CvL, TesCaweb.nl]
 
