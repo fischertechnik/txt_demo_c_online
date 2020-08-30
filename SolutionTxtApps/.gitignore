@@ -1,5 +1,5 @@
 #gitignore for SolutionTxtApps in \txt_demo_c_online
-#2020-07-29 v1.1.2.2[CvL]
+#2020-08-30 v1.1.2.3[CvL]
 #
 Documentation/
 *.vcxproj.user
@@ -10,17 +10,24 @@ Documentation/
 *.sln.docstates
 
 # Build results
+**/TrailSensor/
 **/Camera/[Dd]ebug/
 **/MotorOnOffSwitch/[Dd]ebug/
 **/TestProjIrControl/[Dd]ebug/
 **/TestProj01/[Dd]ebug/
 **/TestProj02/[Dd]ebug/
+**/TestProjCallback/[Dd]ebug/
+**/TestProjCallback02/[Dd]ebug/
+**/TestProjCallback03/[Dd]ebug/
 
 **/Camera/[Rr]elease/
 **/MotorOnOffSwitch/[Rr]elease/
 **/TestProjIrControl/[Rr]elease/
 **/TestProj01/[Rr]elease/
 **/TestProj02/[Rr]elease/
+**/TestProjCallback/[Rr]elease/
+**/TestProjCallback02/[Rr]elease/
+**/TestProjCallback03/[Rr]elease/
 [Dd]ebug/*.xml
 *.iobj
 *.ipdb
