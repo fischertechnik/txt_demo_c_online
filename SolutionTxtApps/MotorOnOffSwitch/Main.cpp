@@ -93,8 +93,6 @@ int main()
             ComHandler->SetOutMotorValues(ShmIfId_TXT::LOCAL_IO, motorId, 150, CCW);
         }
         */
- 
-
         
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
      

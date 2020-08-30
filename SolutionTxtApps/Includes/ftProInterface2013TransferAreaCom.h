@@ -22,7 +22,10 @@
 // TO DO:
 //
 ///////////////////////////////////////////////////////////////////////////////
-// 
+// Changes: 2020 - 08 - 25 C.van Leeuwen, Copyright (C) 2020
+//          Add callbacks for CounterReset, Counter, Universal Input and
+//          MotoReachedSteps like on the TX-C/Robo interface
+//          Use log file like on the TX-C
 //Changes: 2020 - 06 - 18 C.van Leeuwen, Copyright (C) 2020
 //          It is now working for firmware 4.6.6. and 4.7.0 pre-release.
 //          Reduce the size of the TA: max=2 TXT master + TXT slave01,
@@ -66,7 +69,7 @@
 
 #include <winsock2.h>
 #include <future>
-
+#include <bitset>
 
 #ifdef _LIB
 #define  FtPro_API 
@@ -85,6 +88,7 @@ extern "C" {
 
 }
 using namespace std;
+using namespace fischertechnik::txt::ids;
 
 // Double inclusion protection 
 #if(!defined(ftProInterface2013TransferAreaCom_H))
@@ -99,24 +103,43 @@ using namespace std;
 namespace fischertechnik {
 	namespace txt {
 		namespace remote {
+			/// <summary>
+			/// Struc to generated the callback's.
+			/// DoTransfer (Compressed only) will set if their is a change, the event generator will reset after calling the callback
+			/// </summary>
+			struct InputChanged {
+				bitset<ftIF2013_nUniversalInputs>      uniIn = { 0 };
+				bitset<ftIF2013_nCounters>      cnt = { 0 };
+				bitset<ftIF2013_nCounters>      counter = { 0 };
+				bitset<ftIF2013_nMotorOutputs>      motorReached = { 0 };
+				bitset<ftIF2013_nIRChannels + 1>      gameControlLeft = { 0 };
+				bitset<ftIF2013_nIRChannels + 1>      gameControlRight = { 0 };
+				bitset<ftIF2013_nIRChannels + 1>      gameControlButon = { 0 };
+			};
+
+
 
 			class FtPro_API ftIF2013TransferAreaComHandler
 			{
 			protected:
-				// Constructor
-				//
-				// transferarea = pointer to transfer area to which this transfer handler
-				//                shall transfer data.
-				//                The user must ensure, that this persists as long as the
-				//                ftIF2013TransferAreaComHandler object is active.
-				// nAreas       = number of areas (=master+extensions) to handle, max=IF08_MAX
-				// name         = TCP/IP address or host name
-				//                usually 192.168.7.2 USB, 192.168.8.2 for WLAN and 192.168.9.2 for Bluetooth
-				// port         = TCP/IP port number, usually 65000
+				/// <summary>
+				/// Constructor
+				/// </summary>
+				/// <param name="transferarea">pointer to transfer area to which this transfer handler
+				///               shall transfer data.
+				///                The user must ensure, that this persists as long as the
+				///                ftIF2013TransferAreaComHandler object is active. </param>
+				/// <param name="nAreas"> number of areas (=master+extensions) to handle, max=IF_TXT_MAX (1 or 2) </param>
+				/// <param name="name">TCP/IP address or host name
+				///                usually 192.168.7.2 USB, 192.168.8.2 for WLAN and 192.168.9.2 for Bluetooth</param>
+				/// <param name="port">TCP/IP port number, usually 65000</param>
+				/// <param name="logMapName">directory where the library stores his log file</param>
+				/// <param name="logLevel">The level of logging</param>
 				ftIF2013TransferAreaComHandler(FISH_X1_TRANSFER* transferarea, int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000", const char* logMapName = ".\\", LogLevel logLevel = LogLevel::LvLOGERR);
 
-				// Destructor
-				// If transfer not yet ended it is also running EndTransfer 
+				/// <summary>
+				/// Destructor
+				/// </summary>
 				~ftIF2013TransferAreaComHandler();
 			public:
 				/// <summary>
@@ -143,17 +166,11 @@ namespace fischertechnik {
 				// Can only be used after BeginTransfer()
 				bool UpdateConfig();
 
-
-				// Do an I/O transfer with compressed data transmission.
-				// This mode is always faster and more reliable than the simple mode.
-				// Note: transfers are automatically timed by the interface to once per 10ms
-				// The interface sends the response 10ms after it send the previous response
-
 				/// <summary>
 				/// Do an I/O transfer.<br/>  
 				/// For the mode <see cref="ftIF2013TransferAreaComHandler::SetTransferMode"></see>
-				///  <seealso cref="ftIF2013TransferAreaComHandler::DoTransferCompressed"></see>
-				///  <seeaslo  cref="ftIF2013TransferAreaComHandler::DoTransferSimple"></see>
+				///  <seealso cref="ftIF2013TransferAreaComHandler::DoTransferCompressed"></seealso>
+				///  <seealso  cref="ftIF2013TransferAreaComHandler::DoTransferSimple"></seealso>
 				/// 
 				/// Compressed mode is always faster and more reliable than the simple mode.
 				/// Note: transfers are automatically timed by the interface to once per 10ms
@@ -161,7 +178,7 @@ namespace fischertechnik {
 				/// </summary>
 				/// <remarks> since 2020-06-18 </remarks>
 				/// <returns>successful </returns>
-				bool DoTransfer();
+				virtual bool DoTransfer();
 				// Close the TCP/IP channel
 
 				void EndTransfer();
@@ -230,18 +247,19 @@ namespace fischertechnik {
 			  // It is recommended to use the compressed transfer mode.
 			  // Note: transfers are automatically timed by the interface to once per 10ms
 			  // The interface sends the response 10ms after it send the previous response
-				bool DoTransferSimple();
+				virtual bool DoTransferSimple();
 
 				// Do an I/O transfer with compressed data transmission.
 				// This mode is always faster and more reliable than the simple mode.
 				// Note: transfers are automatically timed by the interface to once per 10ms
 				// The interface sends the response 10ms after it send the previous response
-				bool DoTransferCompressed();
+				virtual bool DoTransferCompressed();
 
-			protected:
-				// Pointer to transfer area to which this transfer handler shall transfer data
+				// Pointer to transfer area to which this transfer handler shall transfer data, both are pointing to the same array
 				FISH_X1_TRANSFER* m_transferarea;
 				FISH_X1_TRANSFER* FishX1Transfer;//// [IF08_MAX] in the 
+				//Pointer 
+				InputChanged *  m_inputChanged;
 
 				// Number of areas (=master+extensions) to handle, max=IF08_MAX
 				int m_nAreas;
@@ -283,13 +301,9 @@ namespace fischertechnik {
 				SOCKET m_I2Csocket;
 				size_t m_I2Cbuffersize;
 				unsigned char* m_I2Cbuffer;
-			protected:
 				ftIF2013TransferAreaComHandlerEx1(FISH_X1_TRANSFER* transferarea, int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000", const char* logMapName = ".\\", LogLevel logLevel = LogLevel::LvLOGERR);
-
-				//ftIF2013TransferAreaComHandlerEx1(int nAreas = 1, const char* name = "192.168.7.2", const char* port = "65000");
-
 				~ftIF2013TransferAreaComHandlerEx1();
-				// volatile FISH_X1_TRANSFER* GetTransferAreasArrayAddr(HANDLE fthdl);
+	
 			public:
 				/// <summary>
 				/// Start the I2C communication

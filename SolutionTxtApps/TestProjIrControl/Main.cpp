@@ -69,7 +69,7 @@ volatile FISH_X1_TRANSFER* TransArea;
 
 int main()
 {
-	ComHandler = new ftIF2013TransferAreaComHandlerEx2(IF_TXT_MAX, MyIP.c_str(), TaPort.c_str(), logMap.c_str(), LogLevel::LvLOG);
+	ComHandler = new ftIF2013TransferAreaComHandlerEx2(IF_TXT_MAX, MyIP.c_str(), TaPort.c_str(), logMap.c_str(), LogLevel::LvLOGERR);
 	if (ComHandler == nullptr) {
 		cerr << "Main: ComHandler nullptr" << endl;
 		return -3;

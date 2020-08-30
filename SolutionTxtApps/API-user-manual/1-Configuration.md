@@ -1,6 +1,8 @@
 # Set the TXT functional configuration
 This needs to be done before starting the  TA communication with ```ftxStartTransferArea()```.
 
+> For working with the callbacks events[ see 8](.\events.md).
+
 ## 3.10 SetFtUniConfig
 ```C 
 FtErrors SetFtUniConfig(
