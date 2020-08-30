@@ -1,12 +1,70 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        "TestProj01"
+        "TestProjCallback02"
     </assembly>
     <members>
         <member name="F:ComHandler">
             <summary>
 Command handler 
+</summary>
+        </member>
+        <member name="M:MyCallBacks.MyTick(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*)">
+            <summary />
+            <param name="o" />
+        </member>
+        <member name="M:MyCallBacks.MyJoystick(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int16,System.Int16)">
+            <summary>
+Example callback for use with the IR-devices. Joystick value has been changed.
+        Using only the X-axis of the left and right joystick
+</summary>
+            <param name="o">calling object</param>
+            <param name="shmId">master or slave</param>
+            <param name="id">IR device id</param>
+            <param name="gr">Left or right joystick</param>
+            <param name="axisX">[-15..00..15]</param>
+            <param name="axisY">[-15..00..15]</param>
+        </member>
+        <member name="M:MyCallBacks.MyCntResetReady(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)">
+            <summary>
+Example callback: print a text
+</summary>
+            <param name="o">calling object</param>
+            <param name="shmId">master or slave</param>
+            <param name="id" />
+            <param name="messageId" />
+        </member>
+        <member name="M:MyCallBacks.MyCount(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)">
+            <summary>
+Example callback: print a text
+</summary>
+            <param name="o">calling object</param>
+            <param name="shmId">master or slave</param>
+            <param name="id" />
+            <param name="count" />
+        </member>
+        <member name="M:MyCallBacks.MyMotorReached(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16,System.UInt16)">
+            <summary>
+Example callback: print a text
+</summary>
+            <param name="o">calling object</param>
+            <param name="shmId">master or slave</param>
+            <param name="id" />
+            <param name="position" />
+            <param name="messageId" />
+        </member>
+        <member name="M:MyCallBacks.MyUniInCallback(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean)">
+            <summary>
+Example callback: print a text
+</summary>
+            <param name="o">calling object</param>
+            <param name="shmId">master or slave</param>
+            <param name="id" />
+            <param name="state" />
+        </member>
+        <member name="T:MyCallBacks">
+            <summary>
+The callbacks but now in a class
 </summary>
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsSlaveActive">
@@ -566,6 +624,7 @@ The 4 Motor ouputs
         <member name="T:LogLevel">
             <summary />
         </member>
+        <!-- Discarding badly formed XML document comment for member 'D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbCntResetReady'. -->
         <!-- Discarding badly formed XML document comment for member 'D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbCntResetReady'. -->
     </members>
 </doc>

@@ -9,9 +9,11 @@
 Command handler 
 </summary>
         </member>
-        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetCBCounterResetted(=FUNC:System.Void(System.UInt32!System.Runtime.CompilerServices.IsLong,System.UInt32!System.Runtime.CompilerServices.IsLong))">
-            <summary />
-            <param name="fpCounterResetted" />
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsSlaveActive">
+            <summary>
+The number of active slaves.
+</summary>
+            <returns />
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetMicLog(ShmIfId_TXT)">
             <summary>
@@ -123,7 +125,7 @@ N.3.1 returns the state. The [shmId:idx, configuration] needs to be okay,
             <param name="idx" />
             <param name="count">numeric value</param>
             <param name="state">logical value, state</param>
-            <returns />
+            <returns>error</returns>
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartCounterReset(ShmIfId_TXT,&lt;unknown type&gt;)">
             <summary>
@@ -150,14 +152,6 @@ N.3.1 returns the state. The [shmId:idx, configuration] needs to be okay,
             <param name="duty" />
             <returns />
         </member>
-        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StopMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;)">
-            <summary>
-3.14 Stop Motor output mIdx and reset the enhance mode
-</summary>
-            <param name="shmId">Master or slave TXT controller</param>
-            <param name="mIdx" />
-            <returns />
-        </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StopAllMotorExCmd(ShmIfId_TXT)">
             <summary>
 3.15 Stops al the motors, set the distances on 0 and remove the master slave relations (reset the enhanced mode)
@@ -165,23 +159,62 @@ N.3.1 returns the state. The [shmId:idx, configuration] needs to be okay,
             <param name="shmId">Master or slave TXT controller</param>
             <returns />
         </member>
-        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsMotorExReady(ShmIfId_TXT,&lt;unknown type&gt;)">
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StopMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;)">
             <summary>
-N.2.2 Enhanced motor mode, has the motor reach his position?
+3.14 Stop Motor output mIdx, set the distance on 0 and remove the master slave relation (reset the enhance mode)
 </summary>
             <param name="shmId">Master or slave TXT controller</param>
             <param name="mIdx" />
             <returns />
         </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.IsMotorExReady(ShmIfId_TXT,&lt;unknown type&gt;)">
+            <summary>
+N.2.2 Enhanced motor mode, has the motor reached his position?
+</summary>
+            <param name="shmId">Master or slave TXT controller</param>
+            <param name="mIdx" />
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32,&lt;unknown type&gt;,&lt;unknown type&gt;,&lt;unknown type&gt;,&lt;unknown type&gt;,&lt;unknown type&gt;,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int32)">
+            <summary>(3.13A) Enhance motor control, Master and 0..3  slave. Motor in enhance mode.<br />
+Generates before the start of the motor(s) also a reset for the addressed Counter(s).
+</summary>
+            <param name="shmId">which interface</param>
+            <param name="mIdx">0..3 index master motor</param>
+            <param name="duty">power 0..512 (PWM) </param>
+            <param name="pulses">number of pulses before stop, 1 rotation =xx pulses. </param>
+            <param name="s1Idx">0..3 index slave motor 1 or:  Motor::NoMotor  = not in use</param>
+            <param name="s2Idx">0..3 index slave motor 2 or:  Motor::NoMotor  = not in use</param>
+            <param name="s3Idx">0..3 index slave motor 3 or:  Motor::NoMotor  = not in use</param>
+            <param name="mDirection">direction of the master motor</param>
+            <param name="s1Direction">direction of the slave 1 motor</param>
+            <param name="s2Direction">direction of the slave 2 motor</param>
+            <param name="s3Direction">direction of the slave 3 motor</param>
+            <returns> Ft-error reference.</returns>
+        </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32,&lt;unknown type&gt;,System.Int32)">
             <summary>
-(3.13B)Enhance motor control, Master  Motor in enhance mode.
+(3.13B)Enhance motor control, Master  Motor in enhance mode.<br />
+Generates before the start of the motor(s) also a reset for the addressed Counter(s).
 </summary>
             <param name="shmId">Enhanced motor control, Master only in enhance mode. Distance only.</param>
-            <param name="mIdx" />
-            <param name="duty" />
+            <param name="mIdx">index master motor</param>
+            <param name="duty">[0..512]</param>
             <param name="mDirect">direction of the master motor</param>
             <param name="pulses">number of pulses before stop, 1 rotation =xx pulses.</param>
+            <returns>Ft-error reference.</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32,&lt;unknown type&gt;,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int32)">
+            <summary>
+(3.13) Enhance motor control, Master and 0..1 slave motor in enhance mode.
+</summary>
+            <param name="shmId" />
+            <param name="mIdx">index master motor</param>
+            <param name="duty">[0..512]</param>
+            <param name="sIdx">0..3 index slave motor 1 or:  Motor::NoMotor  = not in use</param>
+            <param name="mDirect">direction of the master motor</param>
+            <param name="sDirect">direction of the slave 1 motor</param>
+            <param name="pulses" />
             <returns />
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetOutPwmValues(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32)">
@@ -229,14 +262,55 @@ N.2.2 Inverse the direction of the motor
             <param name="direction">1=CW, 0 halt, -1=CCW</param>
             <returns>Error if the Motor is cofigurated as 2 single Outputs</returns>
         </member>
-        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtMotorConfig(ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean)">
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtCbJoyStick(ShmIfId_TXT,&lt;unknown type&gt;,std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int16,System.Int16)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**,ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int16,System.Int16)&gt;,std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int16,System.Int16)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**,ShmIfId_TXT,&lt;unknown type&gt;,&lt;unknown type&gt;,System.Int16,System.Int16)&gt;)">
             <summary>
-3.12 Configurate the Motor/ Output mode
+N.8.21 Set Callbacks (events) for the IT-device (Joystick controller)
+</summary>
+            <param name="shmId">master or master+slave</param>
+            <param name="id">IR-controller id</param>
+            <param name="JsX">callback for the X axis or nullptr</param>
+            <param name="JsY">callback for the Y axis or nullptr</param>
+            <returns>success or error</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtTaCompleted(std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**)&gt;)">
+            <summary>
+N.3.20 Set Callback for Transfer Area Cycle Complete (direct after a send/received
+</summary>
+            <param name="callback">optional callback for TA transfer tick</param>
+            <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtMotorConfig(ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean,std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16,System.UInt16)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16,System.UInt16)&gt;)">
+            <summary>
+N.8.12 (3.12) Configurate the Motor/ Output mode
 </summary>
             <param name="shmId" />
             <param name="idxMotor" />
             <param name="status">true means Motor (full bridge), false means Output mode (half bridge)</param>
+            <param name="callback">optional callback for enhance mode, motor has reached its position</param>
             <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtCntConfig(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32,std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)&gt;,std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)&gt;)">
+            <summary>
+N.8.11 (3.11)  Configurate the Counter Input
+</summary>
+            <param name="shmId">master or slave</param>
+            <param name="iCnt">id counter  </param>
+            <param name="mode"> 1= rising edge, 0 falling edge</param>
+            <param name="callbackCount">optional callback for counter value has been changed mode</param>
+            <param name="callbackCnt">optional callback for reset has been finished.</param>
+            <returns>error in case of parameter errors</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtUniConfig(ShmIfId_TXT,&lt;unknown type&gt;,fischertechnik.txt.ids.InputMode,std.function&lt;(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean)(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2**,ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean)&gt;)">
+            <summary>
+N.8.10 (3.10A) Configurate the Universal Input, digital with callback
+</summary>
+            <param name="shmId">master or master+slave </param>
+            <param name="idxIO" />
+            <param name="mode">only for digital R or V</param>
+            <param name="tCbUniInputDigChanged" />
+            <param name="callback">optional callback for digital input has been changed mode</param>
+            <returns>error if not R or V</returns>
+            <see>https://stackoverflow.com/questions/14189440/c-callback-using-class-member </see>
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtUniConfig(ShmIfId_TXT,&lt;unknown type&gt;,fischertechnik.txt.ids.InputMode,System.Boolean)">
             <summary>
@@ -246,15 +320,6 @@ N.2.2 Inverse the direction of the motor
             <param name="idxIO" />
             <param name="mode" />
             <param name="digital" />
-            <returns />
-        </member>
-        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.SetFtCntConfig(ShmIfId_TXT,&lt;unknown type&gt;,System.Int32)">
-            <summary>
-3.11 Configurate the Counter Input
-</summary>
-            <param name="shmId" />
-            <param name="iCnt" />
-            <param name="mode"> 1= rising edge, 0 falling edge</param>
             <returns />
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.ftxIsTransferActiv">
@@ -271,25 +336,26 @@ N.2.2 Inverse the direction of the motor
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.ftxStartTransferArea">
             <summary>
-3.1 start the communication thread and configere the Motor/Outputs, Inputs and Counters.
+3.1 start the communication thread and configere the Motor/Outputs, Inputs and Counters.<br />
+The cycle time is betweem the 10 and +/- 40 msec.
 </summary>
-            <remarks> The configurations need to be set before!  </remarks>
+            <remarks> The configurations for the TXT needs to be set before this start!  </remarks>
             <returns>success or error</returns>
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.GetTransferAreasArrayAddr">
             <summary>
-3.4
+3.4 Get the pointer to the Transfer area
 </summary>
-            <returns />
+            <returns>the pointer</returns>
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.Dispose">
             <summary>
-3.0B
+3.0B de
 </summary>
         </member>
         <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.#ctor(System.Int32,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,LogLevel)">
             <summary>
-3.0A
+3.0A constructor
 </summary>
             <param name="nAreas" />
             <param name="name" />
@@ -297,6 +363,61 @@ N.2.2 Inverse the direction of the motor
             <param name="logMapName" />
             <param name="logLevel" />
             <returns />
+        </member>
+        <member name="D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbTaJoyStick">
+            <summary>
+ T.N.8.21 Callback for the fischertechnik IR-controller (Joystick) 
+</summary>
+            <param name="object">pointer to the caller instance</param>
+            <param name="shmId">Which TXT controller, master or slave</param>
+            <param name="id">which IR-device</param>
+            <param name="group">which IR-devicejoystick, Left or Right</param>
+            <param name="AxisX">X-as value of the joystick [-15..0..15]</param>
+            <param name="AxisY">Y-as value of the joystick  [-15..0..15]</param>
+        </member>
+        <member name="D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbTaCompleted">
+            <summary>
+ T.N.8.20 Callback for the TA communication, direct after the send and received inputs (TaCompleted)
+</summary>
+            <param name="object">pointer to the caller instance</param>
+        </member>
+        <member name="D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbCount">
+            <summary>
+ T.N.8.11B Callback for the C counter  [shmId,  id] has changed, last known [count]
+</summary>
+            <param name="object">pointer to the caller instance</param>
+        </member>
+        <member name="D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbMotorReached">
+            <summary>
+T.N.8.12 The Motor  [shmId,  id] (in enhance mode)  has reached its [position].
+</summary>
+            <param name="object">pointer to the caller instance</param>
+            <param name="messageId">Id of the start MotorEx, .</param>
+        </member>
+        <member name="D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbUniInputDigChanged">
+            <summary>
+T.N.8.10 The Digital Universal Input [shmId,  id]  has changed into [state]
+</summary>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.DoTransferCompressed">
+            <summary>
+Do an I/O transfer with compressed data transmission.
+This mode is always faster and more reliable than the simple mode.
+Note: transfers are automatically timed by the interface to once per 10ms
+The interface sends the response 10 to +/- 30ms after it send the previous response.<br />
+Only in this mode are the callbacks optional active.
+</summary>
+            <returns>successful</returns>
+        </member>
+        <member name="M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.DoTransferSimple">
+            <summary>
+Do a transfer (uncompressed MASTER ONLY mode
+This function is mostly to illustrate the use of the simple uncompressed transfer mode e.g. for use in other languages.
+It is recommended to use the compressed transfer mode.
+Note: transfers are automatically timed by the interface to once per 10ms
+The interface sends the response 10ms after it send the previous response
+</summary>
+            <returns>successful</returns>
         </member>
         <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandlerEx1.StopI2C">
             <summary>
@@ -324,6 +445,18 @@ Print the IR info to the console
 </summary>
             <param name="master_ext" />
         </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.DoTransfer">
+            <summary>
+Do an I/O transfer.<br />  
+For the mode <see cref="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.SetTransferMode(System.Boolean)" /><seealso cref="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.DoTransferCompressed" /><seealso cref="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.DoTransferSimple" />
+
+Compressed mode is always faster and more reliable than the simple mode.
+Note: transfers are automatically timed by the interface to once per 10ms
+The interface sends the response 10ms after it send the previous response
+</summary>
+            <remarks> since 2020-06-18 </remarks>
+            <returns>successful </returns>
+        </member>
         <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.SetTransferMode(System.Boolean)">
             <summary>
 Set the transfer mode <br />
@@ -333,6 +466,42 @@ Default is Compressed.
 Compression mode = true: works for both only master and master+ slave.</param>
             <remarks> since 2020-06-18<br />  MicLog and MicLin do not work in the Simple mode</remarks>
             <returns />
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.Dispose">
+            <summary>
+Destructor
+</summary>
+        </member>
+        <member name="M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.#ctor(shm_if_s*,System.Int32,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,LogLevel)">
+            <summary>
+Constructor
+</summary>
+            <param name="transferarea">pointer to transfer area to which this transfer handler
+              shall transfer data.
+               The user must ensure, that this persists as long as the
+               ftIF2013TransferAreaComHandler object is active. </param>
+            <param name="nAreas"> number of areas (=master+extensions) to handle, max=IF_TXT_MAX (1 or 2) </param>
+            <param name="name">TCP/IP address or host name
+               usually 192.168.7.2 USB, 192.168.8.2 for WLAN and 192.168.9.2 for Bluetooth</param>
+            <param name="port">TCP/IP port number, usually 65000</param>
+            <param name="logMapName">directory where the library stores his log file</param>
+            <param name="logLevel">The level of logging</param>
+        </member>
+        <member name="T:fischertechnik.txt.remote.InputChanged">
+            <summary>
+Struc to generated the callback's.
+DoTransfer (Compressed only) will set if their is a change, the event generator will reset after calling the callback
+</summary>
+        </member>
+        <member name="T:ShmIfId_TXT">
+            <summary>
+define IF role (Application - I/O), (Local or Slave)
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.System">
+            <summary>
+The number of Motors, Counters, Inputs, Outputs and IR controllers
+</summary>
         </member>
         <member name="T:fischertechnik.txt.ids.FtErrors">
             <summary>
@@ -352,6 +521,11 @@ IR controller partial joystick axis (0=middle..+15)
         <member name="T:fischertechnik.txt.ids.IrAxisF">
             <summary>
 IR controller full joystick  axis (0=middle -15..0..+15)
+</summary>
+        </member>
+        <member name="T:fischertechnik.txt.ids.IrDevGroup">
+            <summary>
+IR Joystick (0=middle -15..0..+15)
 </summary>
         </member>
         <member name="T:fischertechnik.txt.ids.IrDev">
@@ -392,8 +566,6 @@ The 4 Motor ouputs
         <member name="T:LogLevel">
             <summary />
         </member>
-        <!-- Discarding badly formed XML document comment for member 'M:fischertechnik.txt.remote.ftIF2013TransferAreaComHandler.DoTransfer'. -->
-        <!-- Discarding badly formed XML document comment for member 'M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,<unknown type>,System.Int32,<unknown type>,<unknown type>,<unknown type>,System.Int32)'. -->
-        <!-- Discarding badly formed XML document comment for member 'M:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.StartMotorExCmd(ShmIfId_TXT,<unknown type>,System.Int32,<unknown type>,<unknown type>,<unknown type>,<unknown type>,<unknown type>,<unknown type>,<unknown type>,System.Int32)'. -->
+        <!-- Discarding badly formed XML document comment for member 'D:fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2.tCbCntResetReady'. -->
     </members>
 </doc>

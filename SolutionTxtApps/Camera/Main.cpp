@@ -35,7 +35,7 @@ using  fischertechnik::txt::remote::api::ftIF2013TransferAreaComHandlerEx2;
 using  namespace fischertechnik::txt::ids;
 ftIF2013TransferAreaComHandlerEx2* ComHandler;
 
-const std::string MyIP = "192.168.10.171";
+const std::string MyIP = "192.168.7.2";//"192.168.10.171";
 const std::string TaPort = "65000";
 const std::string logMap = "H:\\workspaceVS\\txt_demo_c_online.git\\SolutionTxtApps\\";//map for the internal log file
 

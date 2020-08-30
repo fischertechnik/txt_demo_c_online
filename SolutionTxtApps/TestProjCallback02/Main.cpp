@@ -48,7 +48,7 @@ using namespace fischertechnik::txt::remote::api;
 /// <summary>
 /// Adjust for your own situation
 /// </summary>
-const std::string MyIP = "192.168.10.171";
+const std::string MyIP = "192.168.7.2";//"192.168.10.171";
 const std::string TaPort = "65000";// standard for TXT
 const std::string logMap = "H:\\workspaceVS\\txt_demo_c_online.git\\SolutionTxtApps\\";//map for the FtTxtLib log file
 /****************************************************************************/

@@ -1,9 +1,38 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        "TestProj01"
+        "TestProjCallback03"
     </assembly>
     <members>
+        <member name="M:MyCntResetReady(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)">
+            <summary />
+            <param name="o" />
+            <param name="shmId" />
+            <param name="id" />
+            <param name="messageId" />
+        </member>
+        <member name="M:MyCount(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16)">
+            <summary />
+            <param name="o" />
+            <param name="shmId" />
+            <param name="id" />
+            <param name="count" />
+        </member>
+        <member name="M:MyMotorReached(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.UInt16,System.UInt16)">
+            <summary />
+            <param name="o" />
+            <param name="shmId" />
+            <param name="id" />
+            <param name="position" />
+            <param name="messageId" />
+        </member>
+        <member name="M:MyUniInCallback(fischertechnik.txt.remote.api.ftIF2013TransferAreaComHandlerEx2*,ShmIfId_TXT,&lt;unknown type&gt;,System.Boolean)">
+            <summary />
+            <param name="o" />
+            <param name="shmId" />
+            <param name="id" />
+            <param name="state" />
+        </member>
         <member name="F:ComHandler">
             <summary>
 Command handler 
