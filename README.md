@@ -14,19 +14,23 @@
 
 # Note about the behavior of the I2C or SLI in the online mode.
 
-An I2C or SLI connect will be lost in online mode if no new action is taken within 5 seconds. This point has already been addressed in some example programs. Because the ROBOPro elements of I2C also run via an SLI, the same workaround applies to both.
+An I2C or SLI connection will be lost in online mode if no new action is taken within 5 seconds, it does not restart. This point has already been addressed in some example programs. Because the ROBOPro elements of I2C also run via an SLI, the same workaround applies to both.
 
 - For I2C a dummy operation that is repeated within 5 sec.
    This can be a simple read.
-- For an SLI a dommy operation to a ROBOPro SLI extension function "StayAwake".
+- For an SLI a dummy operation to a ROBOPro SLI extension function "StayAwake".
+  Additional information for the SLI developpers only:
+  - [See also SLI code example 1](https://github.com/fischertechnik/txt_demo_ROBOPro_SLI/tree/master/FtTxtWorkspace/TxtSharedLibraryInterface2)
+  - [See also SLI code example 2](https://github.com/fischertechnik/txt_demo_ROBOPro_SLI/tree/master/FtTxtWorkspace/TxtSliTestTA2)
 
-See also:
- - [ROBOPro SLI](./docs/5sec/element(5s).png) 
- - [I2C](.\docs\5sec\element(5s).png)
+ROBOPro workarounds for SLI and I2C:
+
+ - ![ROBOPro SLI](./docs/5secIssue/element(5s).png) 
+
+ - ![ROBOPro I2C](./docs/5secIssue/element(5s_I2C).png) 
 
 
 # TXT C/C++ Remote (on-line mode) examples
-
  
 ## 1 Contact 
 > If you have any questions, problems or suggestions, please contact us: fischertechnik-technik@fischer.de
