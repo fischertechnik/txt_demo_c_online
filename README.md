@@ -12,7 +12,7 @@
 <!-- /TOC -->
 
 
-# Note about the behavior of the I2C or SLI in the online mode.
+# Note about the behavior of the I2C or SLI in the online mode (2021-02).
 
 ## Description:
 An I2C or SLI connection will be lost in online mode if no new action is taken within 5 seconds, it does not restart. This point has already been addressed in some example programs. Because the ROBOPro elements of I2C also run via an SLI, the same workaround applies to both.
